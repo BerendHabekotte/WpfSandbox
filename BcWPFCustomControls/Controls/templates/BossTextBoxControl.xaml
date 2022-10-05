@@ -1,0 +1,26 @@
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:services="clr-namespace:BcWPFCustomControls.Services"
+    xmlns:local="clr-namespace:BcWPFCustomControls.Controls">
+    <ControlTemplate x:Key="BossTextBoxControlTemplate" TargetType="local:BossTextBoxControl">
+        <TextBox
+            Name="PART_TextBox"
+            Text="{Binding Path=Text, RelativeSource={RelativeSource TemplatedParent}}"
+            >
+            <services:WatermarkService.Watermark>
+                <TextBlock
+                    HorizontalAlignment="{Binding 
+                        Path=WatermarkHorizontalAlignment, 
+                        RelativeSource={RelativeSource TemplatedParent}}">
+                    <TextBlock.Text>
+                        <Binding
+                            Path="PlaceholderText"
+                            RelativeSource="{RelativeSource TemplatedParent}">
+                        </Binding>
+                    </TextBlock.Text>
+                </TextBlock>
+            </services:WatermarkService.Watermark>
+        </TextBox>
+    </ControlTemplate>
+</ResourceDictionary>

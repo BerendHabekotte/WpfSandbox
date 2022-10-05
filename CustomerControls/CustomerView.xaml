@@ -1,0 +1,317 @@
+﻿<UserControl x:Class="CustomerControls.CustomerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:c="clr-namespace:BcWPFCustomControls.Controls;assembly=BcWPFCustomControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ControlTemplate x:Key="ExtendedTemplate">
+            <StackPanel>
+                <TextBlock Text="{Binding CustomDescription}" />
+            </StackPanel>
+        </ControlTemplate>
+        <ControlTemplate x:Key="DescriptionTemplate">
+            <StackPanel>
+                <TextBlock Text="{Binding Description}" />
+            </StackPanel>
+        </ControlTemplate>
+        <DataTemplate x:Key="LocalCountryTemplate">
+            <Control x:Name="theControl" Focusable="False" Template="{StaticResource ExtendedTemplate}" />
+            <DataTemplate.Triggers>
+                <DataTrigger 
+                    Binding=
+                        "{Binding 
+                            RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ComboBoxItem}}, 
+                            Path=IsSelected}" 
+                            Value="{x:Null}">
+                    <Setter TargetName="theControl" Property="Template" Value="{StaticResource ResourceKey=DescriptionTemplate}" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <Style TargetType="Label">
+            <Setter Property="HorizontalAlignment" Value="Right"></Setter>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,5,0"/>
+        </Style>
+        <Style TargetType="c:BossTextBox">
+            <Setter Property="Margin" Value="0,0,5,0"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Margin" Value="0,0,5,0"/>
+        </Style>
+        <Style TargetType="c:BossCustomComboBox">
+            <Setter Property="Margin" Value="0,0,5,0"/>
+        </Style>
+        <Style TargetType="c:ReferenceComboBox">
+            <Setter Property="Margin" Value="0,0,5,0"/>
+        </Style>
+        <Style TargetType="c:TariffComboBox">
+            <Setter Property="Margin" Value="0,0,5,0"/>
+        </Style>
+        <Style TargetType="c:BossCustomUnitTextBox">
+            <Setter Property="Margin" Value="0,0,5,0"/>
+        </Style>
+        <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF7EB4EA"/>
+        <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FF569DE5"/>
+    </UserControl.Resources>
+    <Grid Margin="0,0,10,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="15*"></ColumnDefinition>
+            <ColumnDefinition Width="30*"></ColumnDefinition>
+            <ColumnDefinition Width="15*"></ColumnDefinition>
+            <ColumnDefinition Width="30*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Label Grid.Column="0">Id</Label>
+        <TextBox x:Name="Id" Grid.Row="0" Grid.Column="1" Text="{Binding CustomerId, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"></TextBox>
+        <Label Grid.Row="0" Grid.Column="2">Model Id</Label>
+        <TextBox x:Name="IdTest" Grid.Row="0" Grid.Column="3" Text="{Binding CustomerId, Mode=OneWay}"></TextBox>
+
+        <Label Grid.Row="1" Grid.Column="0">Name</Label>
+        <TextBox 
+            Grid.Row="1" 
+            Grid.Column="1" 
+            Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
+        </TextBox>
+        <Label Grid.Row="1" Grid.Column="2">Model Name</Label>
+        <TextBox 
+            x:Name="NameTest"
+            Grid.Row="1" Grid.Column="3" 
+            Text="{Binding Name, Mode=OneWay}">
+        </TextBox>
+
+        <Label Grid.Row="2" Grid.Column="0">Description</Label>
+        <c:BossCustomTextBox 
+            x:Name="Description"
+            Grid.Row="2" 
+            Grid.Column="1" 
+            PlaceholderText="Fill in the description here"
+            WatermarkHorizontalAlignment="Right"
+            Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
+        </c:BossCustomTextBox>
+        <Label 
+            Grid.Row="2" 
+            Grid.Column="2" 
+            
+            VerticalAlignment="Center">Model Description</Label>
+        <c:BossCustomTextBox
+            x:Name="DescriptionTest"
+            Grid.Row="2" Grid.Column="3" 
+            Text="{Binding Description, Mode=OneWay}">
+        </c:BossCustomTextBox>
+
+        <Label Grid.Row="3" Grid.Column="0">BossCustomComboBox</Label>
+        <c:BossCustomComboBox 
+            x:Name="ClearanceTypeCombobox"
+            Grid.Row="3" 
+            Grid.Column="1" 
+            IsEditable="True"
+            AutoRefType="TYPE_BrokStatusValue"
+            AutoRefFilter="CT"
+            DisplayMemberPath="CodeAndDescription"
+            SelectedValuePath="Code"
+            CustomComboBoxText="{Binding ClearanceType, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
+                ValidatesOnDataErrors=True,
+                ValidatesOnExceptions=True}"
+            PlaceholderText="Dit is de tekst">
+        </c:BossCustomComboBox>
+        <Label Grid.Row="3" Grid.Column="2">Model CT</Label>
+        <TextBox
+            x:Name="ClearanceTypeTest"
+            Grid.Row="3" Grid.Column="3" 
+            Text="{Binding ClearanceType, Mode=OneWay}">
+        </TextBox>
+
+        <Label Grid.Row="4" Grid.Column="0">ComboBox</Label>
+        <ComboBox 
+            x:Name="NormalClearanceTypeCombobox"
+            Grid.Row="4" 
+            Grid.Column="1" 
+            SelectedValuePath="Code"
+            ItemTemplate="{StaticResource LocalCountryTemplate}"
+            SelectedValue="{Binding NormalClearanceType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            IsEditable="False"
+            ItemsSource="{Binding ClearanceTypes}">
+        </ComboBox>
+        <Label Grid.Row="4" Grid.Column="2">Normal Model CT</Label>
+        <TextBox
+            x:Name="NormalClearanceTypeTest"
+            Grid.Row="4" 
+            Grid.Column="3" 
+            Text="{Binding NormalClearanceType, Mode=OneWay}">
+        </TextBox>
+
+        <Label Grid.Row="6" Grid.Column="0">ReferenceComboBox</Label>
+        <c:ReferenceComboBox 
+            x:Name="DescriptionComboBox"
+            Grid.Row="6" 
+            Grid.Column="1"
+            AutoRefType="TYPE_BrokStatusValue"
+            AutoRefFilter="CT"
+            DisplayMemberPath="CustomDescription"
+            CustomDescriptionSeparator="-"
+            CustomDescriptionFields="Code|Type|ProcessingCountry"
+            SelectedValuePath="Code"
+            SelectedValueMemberPath="Description"
+            SelectedValue="{
+                Binding NewClearanceType, 
+                ValidatesOnExceptions=True,
+                NotifyOnValidationError=True
+            }"
+            IsEditable="True"
+            PlaceholderText="Dit is mijn tekst"
+            WatermarkHorizontalAlignment="Center" Height="26" Margin="0,0,5,0" Grid.RowSpan="2" VerticalAlignment="Top"
+            SelectedIndex="1"
+            >
+            </c:ReferenceComboBox>
+
+        <Label Grid.Row="6" Grid.Column="2">Reference Box Test</Label>
+        <TextBox
+            x:Name="ReferenceComboBoxTest"
+            Grid.Row="6" 
+            Grid.Column="3" 
+            Text="{Binding NewClearanceType, Mode=OneWay}">
+        </TextBox>
+
+        <Label Grid.Row="7" Grid.Column="0">Measurements</Label>
+        <c:ReferenceComboBox 
+            x:Name="MeasurementComboBox"
+            Grid.Row="7" 
+            Grid.Column="1" 
+            AutoRefType="TYPE_BrokStatusValue"
+            AutoRefFilter="CT"
+            DisplayMemberPath="CustomDescription"
+            CustomDescriptionSeparator="-"
+            SelectedValuePath="Code"
+            SelectedValue="{
+                Binding NewClearanceType, 
+                ValidatesOnExceptions=True,
+                NotifyOnValidationError=True
+            }"
+            IsEditable="True"
+            PlaceholderText="Andere tekst"
+            WatermarkHorizontalAlignment="Center"
+            CustomDescriptionFields="Code|Description"
+            >
+        </c:ReferenceComboBox>
+
+
+        <Label Grid.Row="8" Grid.Column="0">Weight</Label>
+        <c:BossCustomUnitTextBox
+            Grid.Row="8" 
+            Grid.Column="1" 
+            Margin="5"
+            AmountUnitValue="{
+                Binding WeightObject,
+                Mode=OneWay,
+                ValidatesOnExceptions=True,
+                UpdateSourceTrigger=PropertyChanged}"
+            AmountValue="{
+                Binding Weight,
+                Mode=TwoWay,
+                UpdateSourceTrigger=PropertyChanged,
+                ValidatesOnExceptions=True}"
+            SelectedUnit="{
+                Binding WeightUnit,
+                Mode=TwoWay,
+                UpdateSourceTrigger=PropertyChanged,
+                ValidatesOnExceptions=True,
+                ValidatesOnNotifyDataErrors=True}"
+                AutoRefType="TYPE_MeasurementUnits"
+            >
+        </c:BossCustomUnitTextBox>
+        <Label Grid.Row="8" Grid.Column="2">Model Weight</Label>
+        <TextBox
+            x:Name="WeightTest"
+            Grid.Row="8" 
+            Grid.Column="3" 
+            Text="{Binding WeightObject, Mode=OneWay}">
+        </TextBox>
+
+        <Label 
+            Grid.Row="9"
+            Grid.Column="0">Description</Label>
+        <c:BossTextBox 
+            Grid.Row="9" 
+            Grid.Column="1" 
+            IsEnterKeyAsTab="True"
+            PlaceholderText="Dit is een mooie tekst"
+            WatermarkHorizontalAlignment="Center"
+            Text="{
+                Binding Description, 
+                Mode=TwoWay, 
+                UpdateSourceTrigger=LostFocus,
+                ValidatesOnExceptions=True}">
+        </c:BossTextBox>
+        <Label 
+            Grid.Row="9"
+            Grid.Column="2">Model Description</Label>
+        <TextBox 
+            Grid.Row="9" 
+            Grid.Column="3" 
+            Text="{Binding Description, Mode=OneWay}">
+        </TextBox>
+
+
+
+        <Label 
+            Grid.Row="10"
+            Grid.Column="0">Tariff</Label>
+        <c:TariffComboBox
+            Grid.Row="10" 
+            Grid.Column="1" 
+            ItemsSource="{Binding Tariffs}"
+            DisplayMemberPath="HSCODE"
+            IsEditable="True"
+            SelectedValuePath="HSCODE"
+            SelectedValue="{
+                Binding Tariff, 
+                Mode=TwoWay, 
+                UpdateSourceTrigger=LostFocus, 
+                ValidatesOnExceptions=True}"
+            >
+        </c:TariffComboBox>
+        <Label 
+            Grid.Row="10"
+            Grid.Column="2">Model Tariff</Label>
+        <TextBox 
+            Grid.Row="10" 
+            Grid.Column="3" 
+            Text="{Binding Tariff, Mode=OneWay}">
+        </TextBox>
+        <Label 
+            Grid.Row="11"
+            Grid.Column="2">Model Tariff Details</Label>
+        <c:BossTextBox 
+            Grid.Row="11" 
+            Grid.Column="3" 
+            Text="{
+                Binding TariffDetails, 
+                Mode=TwoWay, 
+                UpdateSourceTrigger=LostFocus,
+                ValidatesOnExceptions=True}"
+            PlaceholderText="{Binding TariffDetailsWatermark, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+        >
+        </c:BossTextBox>
+
+
+    </Grid>
+</UserControl>

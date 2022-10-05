@@ -1,0 +1,122 @@
+[
+	{
+		"Code": "ABK",
+		"Description": "Alternate Broker",
+		"CodeAndDescription": "ABK (Alternate Broker)",
+		"Type": "CT",
+		"ProcessingCountry": "CN",
+		"OriginalDescription": "Alternate Broker"
+	},
+	{
+		"Code": "DEM",
+		"Description": "Deminius",
+		"CodeAndDescription": "DEM (Deminius)",
+		"Type": "CT",
+		"ProcessingCountry": "CN",
+		"OriginalDescription": "Deminius"
+	},
+	{
+		"Code": "ECS",
+		"Description": "外海电商",
+		"CodeAndDescription": "ECS (外海电商)",
+		"Type": "CT",
+		"ProcessingCountry": "CN",
+		"OriginalDescription": "e-Commerce"
+	},
+	{
+		"Code": "FML",
+		"Description": "Formal Entry",
+		"CodeAndDescription": "FML (Formal Entry)",
+		"Type": "CT",
+		"ProcessingCountry": "CN",
+		"OriginalDescription": "Formal Entry"
+	},
+	{
+		"Code": "FTZ",
+		"Description": "Free Zone",
+		"CodeAndDescription": "FTZ (Free Zone)",
+		"Type": "CT",
+		"ProcessingCountry": "CN",
+		"OriginalDescription": "Free Zone"
+	},
+	{
+		"Code": "FZT",
+		"Description": "FreeTrade Zone Tranship",
+		"CodeAndDescription": "FZT (FreeTrade Zone Tranship)",
+		"Type": "CT",
+		"ProcessingCountry": "CN",
+		"OriginalDescription": "FreeTrade Zone Tranship"
+	},
+	{
+		"Code": "FZW",
+		"Description": "FreeTrade Zone Warehouse",
+		"CodeAndDescription": "FZW (FreeTrade Zone Warehouse)",
+		"Type": "CT",
+		"ProcessingCountry": "CN",
+		"OriginalDescription": "FreeTrade Zone Warehouse"
+	},
+	{
+		"Code": "IDM",
+		"Description": "Informal Deminums",
+		"CodeAndDescription": "IDM (Informal Deminums)",
+		"Type": "CT",
+		"ProcessingCountry": "CN",
+		"OriginalDescription": "Informal Deminums"
+	},
+	{
+		"Code": "IDT",
+		"Description": "Informal Dutiable",
+		"CodeAndDescription": "IDT (Informal Dutiable)",
+		"Type": "CT",
+		"ProcessingCountry": "CN",
+		"OriginalDescription": "Informal Dutiable"
+	},
+	{
+		"Code": "INF",
+		"Description": "Informal",
+		"CodeAndDescription": "INF (Informal)",
+		"Type": "CT",
+		"ProcessingCountry": "CN",
+		"OriginalDescription": "Informal"
+	},
+	{
+		"Code": "LND",
+		"Description": "Letter/Doc",
+		"CodeAndDescription": "LND (Letter/Doc)",
+		"Type": "CT",
+		"ProcessingCountry": "CN",
+		"OriginalDescription": "Letter/Doc"
+	},
+	{
+		"Code": "PGS",
+		"Description": "Personal goods",
+		"CodeAndDescription": "PGS (Personal goods)",
+		"Type": "CT",
+		"ProcessingCountry": "CN",
+		"OriginalDescription": "Personal goods"
+	},
+	{
+		"Code": "UDB",
+		"Description": "Underbond",
+		"CodeAndDescription": "UDB (Underbond)",
+		"Type": "CT",
+		"ProcessingCountry": "CN",
+		"OriginalDescription": "Underbond"
+	},
+	{
+		"Code": "ULS",
+		"Description": "Unaccompanied Luggage",
+		"CodeAndDescription": "ULS (Unaccompanied Luggage)",
+		"Type": "CT",
+		"ProcessingCountry": "CN",
+		"OriginalDescription": "Unaccompanied Luggage"
+	},
+	{
+		"Code": "UND",
+		"Description": "Undefined",
+		"CodeAndDescription": "UND (Undefined)",
+		"Type": "CT",
+		"ProcessingCountry": "CN",
+		"OriginalDescription": "Undefined"
+	}
+]

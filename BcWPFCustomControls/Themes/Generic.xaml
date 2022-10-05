@@ -1,0 +1,13 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/BcWPFCustomControls;component/Controls/BossComboBox.xaml"/>
+        <ResourceDictionary Source="/BcWPFCustomControls;component/Controls/BossCustomComboBox.xaml"/>
+        <ResourceDictionary Source="/BcWPFCustomControls;component/Controls/BossCustomTextBox.xaml"/>
+        <ResourceDictionary Source="/BcWPFCustomControls;component/Controls/BossCustomUnitTextBox.xaml"/>
+        <ResourceDictionary Source="/BcWPFCustomControls;component/Controls/templates/ReferenceComboBox.xaml"/>
+        <ResourceDictionary Source="/BcWPFCustomControls;component/Controls/templates/TariffComboBox.xaml"/>
+        <ResourceDictionary Source="/BcWPFCustomControls;component/Controls/templates/BossTextBox.xaml"/>
+        <ResourceDictionary Source="/BcWPFCustomControls;component/Controls/templates/BossTextBoxControl.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

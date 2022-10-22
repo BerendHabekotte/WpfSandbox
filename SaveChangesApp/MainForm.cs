@@ -8,7 +8,6 @@ namespace SaveChangesApp
         public event SaveCustomerDelegate? SaveCustomer;
         public delegate void SaveCustomerDelegate();
 
-
         private ElementHost? customerHost;
 
         public MainForm()
@@ -22,8 +21,10 @@ namespace SaveChangesApp
             customerHost.Dock = DockStyle.Fill;
             wpfHostPanel.Controls.Add(customerHost);
             var customerViewModel = new CustomerViewModel();
-            var customerView = new CustomerView();
-            customerView.DataContext = customerViewModel;
+            var customerView = new CustomerView
+            {
+                DataContext = customerViewModel
+            };
             customerHost.Child = customerView;
             SaveCustomer += customerView.OnSave;
             saveToolStripMenuItem.Click += SaveToolStripMenuItem_Click;
@@ -34,5 +35,9 @@ namespace SaveChangesApp
             SaveCustomer?.Invoke();
         }
 
+        private void saveToolStripButton_Click(object sender, EventArgs e)
+        {
+            SaveCustomer?.Invoke();
+        }
     }
 }

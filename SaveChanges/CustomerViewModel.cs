@@ -70,7 +70,7 @@ namespace SaveChanges
                     OnLostFocusExecute,
                     param => true);
 
-        private void OnLostFocusExecute(object obj)
+        private void OnLostFocusExecute(object? obj)
         {
             if (obj == null)
                 return;
@@ -80,6 +80,12 @@ namespace SaveChanges
             {
                 case "Name":
                     Name = parameters[1];
+                    break;
+                case "Description":
+                    Description = parameters[1];
+                    break;
+                case "ClearanceType":
+                    ClearanceType = parameters[1];
                     break;
                 default:
                     break;

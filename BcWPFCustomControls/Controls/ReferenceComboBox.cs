@@ -195,11 +195,21 @@ namespace BcWPFCustomControls.Controls
             {
                 return;
             }
-            if (SelectedValueMemberPath != null)
+
+            if (SelectedValueMemberPath == null)
             {
-                TextSearch.SetTextPath(this, null);
-                Text = GetMember(DisplayMemberPath);
-                ((TextBox)e.OriginalSource).SelectAll();
+                return;
+            }
+            TextSearch.SetTextPath(this, null);
+            Text = GetMember(DisplayMemberPath);
+            switch (e.OriginalSource)
+            {
+                case ComboBox box:
+                    (box.SelectionBoxItem as TextBox)?.SelectAll();
+                    break;
+                case TextBox box:
+                    box.SelectAll();
+                    break;
             }
         }
 

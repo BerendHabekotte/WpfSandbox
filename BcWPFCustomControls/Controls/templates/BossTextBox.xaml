@@ -11,7 +11,7 @@
     <SolidColorBrush x:Key="TextBox.Static.ReadonlyBackground" Color="#E1EEFC"/>
     <SolidColorBrush x:Key="TextBox.Static.ValidationError.Background" Color="Yellow"/>
     <SolidColorBrush x:Key="Border.Static.ValidationError.BorderBrush" Color="#FFDC000C"/>
-    <ControlTemplate x:Key="TextBoxTemplate" TargetType="TextBoxBase">
+    <ControlTemplate x:Key="TextBoxTemplate" TargetType="local:BossTextBox">
         <Border 
             BorderThickness="{TemplateBinding Border.BorderThickness}" 
             BorderBrush="{TemplateBinding Border.BorderBrush}" 
@@ -24,17 +24,20 @@
                 Focusable="False"
                 >
                 <services:WatermarkService.Watermark>
-                    <TextBlock
-                        HorizontalAlignment="{Binding 
-                            Path=WatermarkHorizontalAlignment, 
-                            RelativeSource={RelativeSource TemplatedParent}}">
-                        <TextBlock.Text>
-                            <Binding
-                                Path="PlaceholderText"
-                                RelativeSource="{RelativeSource TemplatedParent}">
-                            </Binding>
-                        </TextBlock.Text>
-                    </TextBlock>
+                <TextBlock
+                    TextWrapping="{Binding 
+                    PlaceholderTextWrapping, 
+                        RelativeSource={RelativeSource TemplatedParent}}"
+                    HorizontalAlignment="{Binding 
+                        Path=WatermarkHorizontalAlignment, 
+                        RelativeSource={RelativeSource TemplatedParent}}">
+                    <TextBlock.Text>
+                        <Binding
+                            Path="PlaceholderText"
+                            RelativeSource="{RelativeSource TemplatedParent}">
+                        </Binding>
+                    </TextBlock.Text>
+                </TextBlock>
                 </services:WatermarkService.Watermark>
             </ScrollViewer>
         </Border>

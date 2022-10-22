@@ -61,63 +61,6 @@ namespace BcWPFCustomControls.Controls
                 typeof(TariffComboBox),
                 new PropertyMetadata());
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         public string SelectedValueMemberPath
         {
             get => (string)GetValue(SelectedValueMemberPathProperty);
@@ -134,6 +77,8 @@ namespace BcWPFCustomControls.Controls
 
         private void TariffComboBox_Loaded(object sender, RoutedEventArgs e)
         {
+            DropDownOpened += TariffComboBox_DropDownOpened;
+
             GotFocus += TariffComboBox_GotFocus;
             LostFocus += TariffComboBox_LostFocus;
             KeyDown += TariffComboBox_KeyDown;
@@ -144,6 +89,16 @@ namespace BcWPFCustomControls.Controls
                 TextSearch.SetTextPath(this, SelectedValueMemberPath);
             }
             itemsSource = ItemsSource;
+        }
+
+        private void TariffComboBox_DropDownOpened(object sender, EventArgs e)
+        {
+            if (!(sender is ComboBox combobox))
+            {
+                return;
+            }
+            var textBox = (TextBox)combobox.Template.FindName("PART_EditableTextBox", combobox);
+            textBox.Select(textBox.Text.Length, 0);
         }
 
         private void TariffComboBox_GotFocus(object sender, RoutedEventArgs e)
@@ -239,15 +194,7 @@ namespace BcWPFCustomControls.Controls
                 return;
             }
             SearchText = item.Text;
-            var count = ItemsSource.OfType<DataRowView>().Count();
-            if (count == 1)
-            {
-                SelectedIndex = 0;
-            }
-            else
-            {
-                IsDropDownOpen = true;
-            }
+            IsDropDownOpen = true;
         }
 
         private void TariffComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -390,8 +337,8 @@ namespace BcWPFCustomControls.Controls
             SelectedValue = PopUpGridSelectedValue;
             IsPopupOpen = false;
         }
-		
+
         private IEnumerable itemsSource;
-		
+
     }
 }

@@ -64,7 +64,7 @@
             <ColumnDefinition Width="15*"></ColumnDefinition>
             <ColumnDefinition Width="30*"></ColumnDefinition>
             <ColumnDefinition Width="15*"></ColumnDefinition>
-            <ColumnDefinition Width="30*"></ColumnDefinition>
+            <ColumnDefinition Width="300"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -78,6 +78,8 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="25"></RowDefinition>
+            <RowDefinition Height="25"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <Label Grid.Column="0">Id</Label>
@@ -301,17 +303,38 @@
             Grid.Row="11"
             Grid.Column="2">Model Tariff Details</Label>
         <c:BossTextBox 
-            Grid.Row="11" 
-            Grid.Column="3" 
-            Text="{
-                Binding TariffDetails, 
+            Grid.Row="11"
+            Grid.Column="3"
+            Text="{Binding 
+            TariffDetails, 
                 Mode=TwoWay, 
                 UpdateSourceTrigger=LostFocus,
                 ValidatesOnExceptions=True}"
             PlaceholderText="{Binding TariffDetailsWatermark, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-        >
-        </c:BossTextBox>
-
-
+            WatermarkHorizontalAlignment="Left"
+        />
+        <ContentControl
+            Grid.Row="12"
+            Grid.Column="3">
+            <Viewbox StretchDirection="DownOnly">
+                <TextBlock 
+                    Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ContentControl}}" 
+                    Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=ContentControl}}" 
+                    TextWrapping="Wrap" 
+                    TextAlignment="Left" 
+                    Text="{Binding TariffDetailsWatermark, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                </TextBlock>
+            </Viewbox>
+        </ContentControl>
+        <c:BossTextBox 
+            Grid.Row="13"
+            Grid.Column="3"
+            Text="{Binding 
+                TariffDetails, 
+                Mode=TwoWay, 
+                UpdateSourceTrigger=LostFocus,
+                ValidatesOnExceptions=True}"
+            PlaceholderText="{Binding TariffDetailsWatermark, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+        />
     </Grid>
 </UserControl>

@@ -265,7 +265,7 @@ namespace BOSSAutoRef.Data
                 "		\"TRF_NR_SUH_CD\": \"03\"," + Environment.NewLine +
                 "		\"TRF_NR_HDR_CD\": \"02\"," + Environment.NewLine +
                 "		\"TRF_NR_SBH_CD\": \"00\"," + Environment.NewLine +
-                "		\"TRF_NR_TSL_TE1\": \"1.品名；2.品牌（中文+英文）；3.型号\"" + Environment.NewLine +
+                "		\"TRF_NR_TSL_TE1\": \"1.品名；2.品牌（中文+英文）；3.型号1.品名；2.品牌（中文+英文）；3.型号1.品名；2.品牌（中文+英文）；3.型号1.品名；2.品牌（中文+英文）；3.型号1.品名；2.品牌（中文+英文）；3.型号\"" + Environment.NewLine +
                 "	}," + Environment.NewLine +
 
                 "	{" + Environment.NewLine +

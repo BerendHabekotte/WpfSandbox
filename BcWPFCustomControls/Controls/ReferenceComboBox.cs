@@ -535,6 +535,6 @@ namespace BcWPFCustomControls.Controls
         private const string CustomDescriptionName = "CustomDescription";
 
         private IEnumerable itemsSource;
-        DataTable table;
+        private DataTable table;
     }
 }

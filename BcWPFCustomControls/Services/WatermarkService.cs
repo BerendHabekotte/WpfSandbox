@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Media;
+using BcWPFCustomControls.Controls;
 
 namespace BcWPFCustomControls.Services
 {
@@ -22,14 +23,14 @@ namespace BcWPFCustomControls.Services
            "Watermark",
            typeof(object),
            typeof(WatermarkService),
-           new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnWatermarkChanged)));
+           new FrameworkPropertyMetadata(null, OnWatermarkChanged));
 
         #region Private Fields
 
         /// <summary>
         /// Dictionary of ItemsControls
         /// </summary>
-        private static readonly Dictionary<object, ItemsControl> itemsControls = new Dictionary<object, ItemsControl>();
+        private static readonly Dictionary<object, ItemsControl> ItemsControls = new Dictionary<object, ItemsControl>();
 
         #endregion
 
@@ -84,19 +85,42 @@ namespace BcWPFCustomControls.Services
                 if (textBox != null)
                 {
                     textBox.TextChanged += TextBox_TextChanged;
+                    if (!(textBox is BossTextBox))
+                    {
+                        return;
+                    }
+                    ((BossTextBox)textBox).PropertyChanged += WatermarkService_PropertyChanged;
                 }
             }
-            else if (d is ItemsControl itemsControl && !(d is ComboBox))
+            else if (d is ItemsControl itemsControl)
             {
                 ItemsControl i = itemsControl;
 
                 // for Items property  
                 i.ItemContainerGenerator.ItemsChanged += ItemsChanged;
-                itemsControls.Add(i.ItemContainerGenerator, i);
+                ItemsControls.Add(i.ItemContainerGenerator, i);
 
                 // for ItemsSource property  
                 DependencyPropertyDescriptor prop = DependencyPropertyDescriptor.FromProperty(ItemsControl.ItemsSourceProperty, i.GetType());
                 prop.AddValueChanged(i, ItemsSourceChanged);
+            }
+        }
+
+        private static void WatermarkService_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (!(sender is TextBox textBox))
+            {
+                return;
+            }
+            Control c = textBox;
+            var scrollViewer = GetChildScrollViewer(c);
+            if (ShouldShowWatermark(scrollViewer))
+            {
+                ShowWatermark(scrollViewer);
+            }
+            else
+            {
+                RemoveWatermark(scrollViewer);
             }
         }
 
@@ -195,7 +219,7 @@ namespace BcWPFCustomControls.Services
         /// <param name="e">A <see cref="ItemsChangedEventArgs"/> that contains the event data.</param>
         private static void ItemsChanged(object sender, ItemsChangedEventArgs e)
         {
-            if (itemsControls.TryGetValue(sender, out ItemsControl control))
+            if (ItemsControls.TryGetValue(sender, out ItemsControl control))
             {
                 if (ShouldShowWatermark(control))
                 {
@@ -262,17 +286,17 @@ namespace BcWPFCustomControls.Services
         /// <returns>true if the watermark should be shown; false otherwise</returns>
         private static bool ShouldShowWatermark(Control c)
         {
-            if (c is ComboBox)
+            if (c is ComboBox comboBox)
             {
-                return (c as ComboBox).Text == string.Empty;
+                return comboBox.Text == string.Empty;
             }
-            else if (c is TextBoxBase)
+            else if (c is TextBox textBox)
             {
-                return (c as TextBox).Text == string.Empty;
+                return textBox.Text == string.Empty;
             }
-            else if (c is ItemsControl)
+            else if (c is ItemsControl itemsControl)
             {
-                return (c as ItemsControl).Items.Count == 0;
+                return itemsControl.Items.Count == 0;
             }
             else if (c is ScrollViewer)
             {
@@ -304,19 +328,19 @@ namespace BcWPFCustomControls.Services
 
         private static bool IsTextBoxParentTextEmpty(DependencyObject dependencyObject)
         {
-            var textbox = GetParentTextBox(dependencyObject);
-            if (textbox == null)
+            var textBox = GetParentTextBox(dependencyObject);
+            if (textBox == null)
             {
                 return false;
             }
-            return textbox.Text == string.Empty;
+            return textBox.Text == string.Empty;
         }
 
         private static ScrollViewer GetChildScrollViewer(DependencyObject dependencyObject)
         {
             ScrollViewer result = null;
             var count = VisualTreeHelper.GetChildrenCount(dependencyObject);
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 var child = VisualTreeHelper.GetChild(dependencyObject, i);
                 if (child is ScrollViewer viewer)
@@ -327,7 +351,7 @@ namespace BcWPFCustomControls.Services
                 {
                     result = GetChildScrollViewer(child);
                 }
-                if (result is ScrollViewer)
+                if (result != null)
                 {
                     break;
                 }

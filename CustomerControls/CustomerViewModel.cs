@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Input;
 
 namespace CustomerControls
@@ -183,6 +184,18 @@ namespace CustomerControls
                     .Where(row => row.Field<string>("HSCODE") == Tariff)
                     .Select(r => r.Field<string>("TRF_NR_TSL_TE1"))
                     .FirstOrDefault();
+        }
+
+        public ICommand ShowAddDialogCommand => new ActionCommand<object>(ShowAddDialogExecute);
+
+        private void ShowAddDialogExecute(object obj)
+        {
+
+            var messageBoxResult = MessageBox.Show("Add something new?",
+                "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (messageBoxResult == MessageBoxResult.Yes)
+            {
+            }
         }
 
         public CustomerViewModel()

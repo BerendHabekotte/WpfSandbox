@@ -24,20 +24,20 @@
                 Focusable="False"
                 >
                 <services:WatermarkService.Watermark>
-                <TextBlock
-                    TextWrapping="{Binding 
-                    PlaceholderTextWrapping, 
-                        RelativeSource={RelativeSource TemplatedParent}}"
-                    HorizontalAlignment="{Binding 
-                        Path=WatermarkHorizontalAlignment, 
-                        RelativeSource={RelativeSource TemplatedParent}}">
-                    <TextBlock.Text>
-                        <Binding
-                            Path="PlaceholderText"
-                            RelativeSource="{RelativeSource TemplatedParent}">
-                        </Binding>
-                    </TextBlock.Text>
-                </TextBlock>
+                    <TextBlock
+                        TextWrapping="{Binding 
+                            PlaceholderTextWrapping, 
+                            RelativeSource={RelativeSource TemplatedParent}}"
+                        HorizontalAlignment="{Binding 
+                            Path=WatermarkHorizontalAlignment, 
+                            RelativeSource={RelativeSource TemplatedParent}}">
+                        <TextBlock.Text>
+                            <Binding
+                                Path="PlaceholderText"
+                                RelativeSource="{RelativeSource TemplatedParent}">
+                            </Binding>
+                        </TextBlock.Text>
+                    </TextBlock>
                 </services:WatermarkService.Watermark>
             </ScrollViewer>
         </Border>

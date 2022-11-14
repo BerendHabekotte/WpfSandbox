@@ -15,6 +15,7 @@ namespace BcWPFCustomControls.Controls
     public class TariffComboBox : ComboBox, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+        private const int MinimumDropDownLength = 4;
 
         static TariffComboBox()
         {
@@ -74,11 +75,9 @@ namespace BcWPFCustomControls.Controls
                 typeof(TariffComboBox),
                 new PropertyMetadata(string.Empty));
 
-
         private void TariffComboBox_Loaded(object sender, RoutedEventArgs e)
         {
             DropDownOpened += TariffComboBox_DropDownOpened;
-
             GotFocus += TariffComboBox_GotFocus;
             LostFocus += TariffComboBox_LostFocus;
             KeyDown += TariffComboBox_KeyDown;
@@ -165,12 +164,13 @@ namespace BcWPFCustomControls.Controls
                 {
                     return;
                 }
-                if (!string.IsNullOrEmpty(item.Text))
+                if (string.IsNullOrEmpty(item.Text))
                 {
-                    if (SelectedIndex == -1 || item.Text != GetMember(DisplayMemberPath))
-                    {
-                        SetSelectedIndexOnTabOut(item.Text);
-                    }
+                    return;
+                }
+                if (SelectedIndex == -1 || item.Text != GetMember(DisplayMemberPath))
+                {
+                    SetSelectedIndexOnTabOut(item.Text);
                 }
                 return;
             }
@@ -188,13 +188,13 @@ namespace BcWPFCustomControls.Controls
             {
                 return;
             }
-            if (Text.Length < 4)
+            SearchText = item.Text;
+            if (string.IsNullOrEmpty(Text))
             {
                 IsDropDownOpen = false;
                 return;
             }
-            SearchText = item.Text;
-            IsDropDownOpen = true;
+            IsDropDownOpen = Text.Length >= MinimumDropDownLength;
         }
 
         private void TariffComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -220,7 +220,7 @@ namespace BcWPFCustomControls.Controls
         {
             if (SelectedIndex == -1)
             {
-                return null;
+                return string.Empty;
             }
             string result = ItemsSource
                 .OfType<DataRowView>()
@@ -235,6 +235,10 @@ namespace BcWPFCustomControls.Controls
             get => searchText;
             set
             {
+                if (searchText == value)
+                {
+                    return;
+                }
                 searchText = value;
                 FilterItemsSource();
             }
@@ -251,7 +255,7 @@ namespace BcWPFCustomControls.Controls
             {
                 if (row[DisplayMemberPath]
                     .ToString()
-                    .IndexOf(SearchText, StringComparison.InvariantCultureIgnoreCase) > -1)
+                    .StartsWith(SearchText))
                 {
                     yield return row;
                 }
@@ -322,8 +326,6 @@ namespace BcWPFCustomControls.Controls
         {
             if (IsReadOnly)
                 return;
-
-            // TODO DI
             var dialog = new DataGridPopup(ItemsSource);
             var dialogResult = dialog.ShowDialog() ?? false;
             if (dialogResult)

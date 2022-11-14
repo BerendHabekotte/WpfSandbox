@@ -74,10 +74,7 @@ namespace BcWPFCustomControls.Controls
         public AutoRefTypes AutoRefType
         {
             get => (AutoRefTypes)GetValue(AutoRefTypeProperty);
-			   
-			 
             set => SetValue(AutoRefTypeProperty, value);
-			 
         }
 
         public static readonly DependencyProperty AutoRefFilterProperty =
@@ -90,10 +87,7 @@ namespace BcWPFCustomControls.Controls
         public string AutoRefFilter
         {
             get => (string)GetValue(AutoRefFilterProperty);
-			   
-			 
             set => SetValue(AutoRefFilterProperty, value);
-			 
         }
 
         public string CustomDescriptionSeparator
@@ -138,19 +132,7 @@ namespace BcWPFCustomControls.Controls
 
         private void ReferenceComboBox_Loaded(object sender, RoutedEventArgs e)
         {
-												 
-			 
-					   
-			 
-			   
-			 
-																											   
             table = CreateDataTable();
-			 
-				 
-			 
-										
-			 
             CreateCustomDescriptionColumn();
             itemsSource = ItemsSource = table.AsDataView();
             GotFocus += ReferenceComboBox_GotFocus;
@@ -259,12 +241,13 @@ namespace BcWPFCustomControls.Controls
                 {
                     return;
                 }
-                if (!string.IsNullOrEmpty(item.Text))
+                if (string.IsNullOrEmpty(item.Text))
                 {
-                    if (SelectedIndex == -1 || item.Text != GetMember(DisplayMemberPath))
-                    {
-                        SetSelectedIndexOnTabOut(item.Text);
-                    }
+                    return;
+                }
+                if (SelectedIndex == -1 || item.Text != GetMember(DisplayMemberPath))
+                {
+                    SetSelectedIndexOnTabOut(item.Text);
                 }
                 return;
             }
@@ -274,10 +257,6 @@ namespace BcWPFCustomControls.Controls
             }
             var bindingExpression = GetBindingExpression(SelectedValueProperty);
             bindingExpression?.UpdateTarget();
-			 
-					   
-			 
-											 
         }
 
         private void ReferenceComboBox_KeyUp(object sender, KeyEventArgs e)
@@ -325,7 +304,7 @@ namespace BcWPFCustomControls.Controls
         {
             if (SelectedIndex == -1)
             {
-                return null;
+                return string.Empty;
             }
             string result = ItemsSource
                 .OfType<DataRowView>()
@@ -429,13 +408,6 @@ namespace BcWPFCustomControls.Controls
         private void FilterItemsSource()
         {
             ItemsSource = string.IsNullOrEmpty(SearchText) ? itemsSource : GetFilteredItemSource();
-			 
-										  
-			 
-				
-			 
-													  
-			 
         }
 
         private IEnumerable GetFilteredItemSource()
@@ -502,20 +474,11 @@ namespace BcWPFCustomControls.Controls
             }
         }
 
-												
-		 
         public ICommand ComboBoxMouseDoubleClick => new ActionCommand<object>(ComboBoxMouseDoubleClickAction, param => true);
-		 
 
-														
-		 
         public ICommand PopUpGridSelectedItemDoubleClick => new ActionCommand<object>(PopUpGridSelectedItemDoubleClickAction, param => true);
-		 
 
-								  
-		 
         public ICommand ClosePopup => new ActionCommand<object>(ClosePopupClickAction, param => true);
-		 
 
         private void ClosePopupClickAction(object obj)
         {
@@ -526,8 +489,6 @@ namespace BcWPFCustomControls.Controls
         {
             if (IsReadOnly)
                 return;
-
-            // TODO DI
             var dialog = new DataGridPopup(ItemsSource);
             var dialogResult = dialog.ShowDialog() ?? false;
             if (dialogResult)

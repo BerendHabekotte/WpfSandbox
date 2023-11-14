@@ -209,6 +209,7 @@
                     x:Name="PART_EditableTextBox" 
                     HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" 
                     IsReadOnly="{Binding IsReadOnly, RelativeSource={RelativeSource TemplatedParent}}" 
+                    IsTabStop="{Binding IsTabStop, RelativeSource={RelativeSource TemplatedParent}}" 
                     Margin="{TemplateBinding Padding}" 
                     Style="{StaticResource ComboBoxEditableTextBox}" 
                     VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}">
@@ -242,6 +243,7 @@
                 <Setter TargetName="border" Property="Background" Value="{StaticResource TextBox.Static.Readonly.Background}" />
                 <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource TextBox.Static.Readonly.Background}" />
                 <Setter Property="MaxDropDownHeight" Value="0" />
+                <Setter Property="IsTabStop" Value="False"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="false">
                 <Setter Property="Opacity" TargetName="border" Value="0.56"/>

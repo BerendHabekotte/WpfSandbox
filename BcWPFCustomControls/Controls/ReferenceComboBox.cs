@@ -143,7 +143,9 @@ namespace BcWPFCustomControls.Controls
             if (SelectedValueMemberPath != null)
             {
                 TextSearch.SetTextPath(this, SelectedValueMemberPath);
+                SetSelectedValueMemberPath();
             }
+
         }
 
         private DataTable CreateDataTable()

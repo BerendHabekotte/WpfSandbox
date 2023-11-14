@@ -48,6 +48,15 @@ namespace CustomerApp
 
         private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
+        }
+
+        private void MainForm_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
+        }
+
+        private void wpfHostPanel_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
             SaveCustomer?.Invoke();
         }
     }

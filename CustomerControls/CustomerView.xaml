@@ -7,57 +7,37 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <ControlTemplate x:Key="ExtendedTemplate">
-            <StackPanel>
-                <TextBlock Text="{Binding CustomDescription}" />
-            </StackPanel>
-        </ControlTemplate>
-        <ControlTemplate x:Key="DescriptionTemplate">
-            <StackPanel>
-                <TextBlock Text="{Binding Description}" />
-            </StackPanel>
-        </ControlTemplate>
-        <DataTemplate x:Key="LocalCountryTemplate">
-            <Control x:Name="theControl" Focusable="False" Template="{StaticResource ExtendedTemplate}" />
-            <DataTemplate.Triggers>
-                <DataTrigger 
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/GeneralResources.xaml" />
+                <ResourceDictionary>
+                    <ControlTemplate x:Key="ExtendedTemplate">
+                        <StackPanel>
+                            <TextBlock Text="{Binding CustomDescription}" />
+                        </StackPanel>
+                    </ControlTemplate>
+                    <ControlTemplate x:Key="DescriptionTemplate">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Description}" />
+                        </StackPanel>
+                    </ControlTemplate>
+                    <DataTemplate x:Key="LocalCountryTemplate">
+                        <Control x:Name="theControl" Focusable="False" Template="{StaticResource ExtendedTemplate}" />
+                        <DataTemplate.Triggers>
+                            <DataTrigger 
                     Binding=
                         "{Binding 
                             RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ComboBoxItem}}, 
                             Path=IsSelected}" 
                             Value="{x:Null}">
-                    <Setter TargetName="theControl" Property="Template" Value="{StaticResource ResourceKey=DescriptionTemplate}" />
-                </DataTrigger>
-            </DataTemplate.Triggers>
-        </DataTemplate>
+                                <Setter TargetName="theControl" Property="Template" Value="{StaticResource ResourceKey=DescriptionTemplate}" />
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
 
-        <Style TargetType="Label">
-            <Setter Property="HorizontalAlignment" Value="Right"></Setter>
-        </Style>
-        <Style TargetType="TextBox">
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Margin" Value="0,0,5,0"/>
-        </Style>
-        <Style TargetType="c:BossTextBox">
-            <Setter Property="Margin" Value="0,0,5,0"/>
-        </Style>
-        <Style TargetType="ComboBox">
-            <Setter Property="Margin" Value="0,0,5,0"/>
-        </Style>
-        <Style TargetType="c:BossCustomComboBox">
-            <Setter Property="Margin" Value="0,0,5,0"/>
-        </Style>
-        <Style TargetType="c:ReferenceComboBox">
-            <Setter Property="Margin" Value="0,0,5,0"/>
-        </Style>
-        <Style TargetType="c:TariffComboBox">
-            <Setter Property="Margin" Value="0,0,5,0"/>
-        </Style>
-        <Style TargetType="c:BossCustomUnitTextBox">
-            <Setter Property="Margin" Value="0,0,5,0"/>
-        </Style>
-        <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF7EB4EA"/>
-        <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FF569DE5"/>
     </UserControl.Resources>
     <Grid Margin="0,0,10,0">
         <Grid.ColumnDefinitions>
@@ -97,7 +77,12 @@
         <TextBox 
             x:Name="NameTest"
             Grid.Row="1" Grid.Column="3" 
-            Text="{Binding Name, Mode=OneWay}">
+            Text="{Binding Name, Mode=OneWay}"
+            IsReadOnly="{Binding IsDutchName }"
+            IsTabStop="{
+                Binding IsReadOnly, 
+                Converter={StaticResource InverseBooleanConverter}, 
+                ElementName=NameTest}">
         </TextBox>
 
         <Label Grid.Row="2" Grid.Column="0">Description</Label>
@@ -175,20 +160,48 @@
             SelectedValueMemberPath="Description"
             SelectedValue="{
                 Binding NewClearanceType, 
-                ValidatesOnExceptions=True,
-                NotifyOnValidationError=True
+                ValidatesOnExceptions=True
             }"
-            IsEditable="True"
             PlaceholderText="Dit is mijn tekst"
             WatermarkHorizontalAlignment="Center" Height="26" Margin="0,0,5,0" Grid.RowSpan="2" VerticalAlignment="Top"
             SelectedIndex="1"
+            IsEditable="True"
+            IsReadOnly="True"
             >
-            </c:ReferenceComboBox>
+        </c:ReferenceComboBox>
 
-        <Label Grid.Row="6" Grid.Column="2">Reference Box Test</Label>
+        <c:ReferenceComboBox 
+            x:Name="SecondDescriptionComboBox"
+            Grid.Row="6" 
+            Grid.Column="3"
+            AutoRefType="TYPE_BrokStatusValue"
+            AutoRefFilter="CT"
+            DisplayMemberPath="CustomDescription"
+            CustomDescriptionSeparator="-"
+            CustomDescriptionFields="Code|Type|ProcessingCountry"
+            SelectedValuePath="Code"
+            SelectedValueMemberPath="Description"
+            SelectedValue="{
+                Binding ClearanceType, 
+                ValidatesOnExceptions=True
+            }"
+            IsEditable="True"
+            PlaceholderText="Dit is de tweede tekst"
+            WatermarkHorizontalAlignment="Center" 
+            Height="26" 
+            Margin="0,0,5,0" 
+            Grid.RowSpan="2" 
+            VerticalAlignment="Top"
+            SelectedIndex="1"
+        >
+        </c:ReferenceComboBox>
+
+
+
+        <Label Grid.Row="7" Grid.Column="2">Reference Box Test</Label>
         <TextBox
             x:Name="ReferenceComboBoxTest"
-            Grid.Row="6" 
+            Grid.Row="7" 
             Grid.Column="3" 
             Text="{Binding NewClearanceType, Mode=OneWay}">
         </TextBox>
@@ -299,6 +312,13 @@
             Grid.Column="3" 
             Text="{Binding Tariff, Mode=OneWay}">
         </TextBox>
+        <Button
+            Grid.Row="11"
+            Grid.Column="0"
+            Content="Change Tariff"
+            Command="{Binding ChangeTariffCommand}"
+            >
+        </Button>
         <Label 
             Grid.Row="11"
             Grid.Column="2">Model Tariff Details</Label>
@@ -326,6 +346,11 @@
                 </TextBlock>
             </Viewbox>
         </ContentControl>
+        <DatePicker Grid.Row="13" Grid.Column="1" IsTodayHighlighted="True">
+            <DatePicker.Resources>
+                <Style TargetType="{x:Type Button}"></Style>
+            </DatePicker.Resources>
+        </DatePicker>
         <c:BossTextBox 
             Grid.Row="13"
             Grid.Column="3"

@@ -43,8 +43,16 @@ namespace CustomerControls
                 if (value == model.CustomerName)
                     return;
                 model.CustomerName = value;
-                OnPropertyChanged("Name");
+                OnPropertyChanged(null);
+                //OnPropertyChanged("Name");
+                //OnPropertyChanged("IsDutchName");
             }
+        }
+
+        public bool IsDutchName
+        {
+            get => Name == null || Name.Contains("Jan");
+            set => OnPropertyChanged("IsDutchName");
         }
 
         public string Description
@@ -101,16 +109,15 @@ namespace CustomerControls
             get => model.NewClearanceType;
             set
             {
-                if (value == null)
+                model.NewClearanceType = value;
+                if (string.IsNullOrWhiteSpace(value))
                 {
-                    model.NewClearanceType = null;
-                    return;
+                    throw new Exception("Clearance type is a mandatory field.");
                 }
                 if (value == "FML")
                 {
                     throw new Exception("Formal Entry is not allowed");
                 }
-                model.NewClearanceType = value;
                 OnPropertyChanged("NewClearanceType");
             }
         }
@@ -196,6 +203,13 @@ namespace CustomerControls
             if (messageBoxResult == MessageBoxResult.Yes)
             {
             }
+        }
+
+        public ICommand ChangeTariffCommand => new ActionCommand<object>(ChangeTariffExecute);
+
+        private void ChangeTariffExecute(object obj)
+        {
+            Tariff = "22040200";
         }
 
         public CustomerViewModel()

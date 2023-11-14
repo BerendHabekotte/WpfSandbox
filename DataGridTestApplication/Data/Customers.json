@@ -1,0 +1,112 @@
+[
+  {
+    "CustomerId": 1,
+    "CustomerName":  "Ahmed",
+    "Address": "First Street",
+    "City": "Eindhoven",
+    "Region": "Brabant",
+    "PostalCode": "5600AA",
+    "Country": "Nederland",
+    "Phone": "0612345678",
+    "IsActive": true
+  },
+  {
+    "CustomerId": 2,
+    "CustomerName": "Thao",
+    "Address": "Second Street",
+    "City": "Eindhoven",
+    "Region": "Brabant",
+    "PostalCode": "5600AA",
+    "Country": "Nederland",
+    "Phone": "0612345678",
+    "IsActive": true
+  },
+  {
+    "CustomerId": 3,
+    "CustomerName": "Anuradha",
+    "Address": "Third Street",
+    "City": "Hyderabad",
+    "Region": "Telangana",
+    "PostalCode": "2213213",
+    "Country": "India",
+    "Phone": "0612345678",
+    "IsActive": true
+  },
+  {
+    "CustomerId": 4,
+    "CustomerName": "Srikanth",
+    "Address": "Fourth Street",
+    "City": "Hyderabad",
+    "Region": "Telangana",
+    "PostalCode": "2213213",
+    "Country": "India",
+    "Phone": "0612345678",
+    "IsActive": true
+  },
+  {
+    "CustomerId": 5,
+    "CustomerName": "Berend",
+    "Address": "Wilgenpad",
+    "City": "Groningen",
+    "Region": "Groningen",
+    "PostalCode": "9700AA",
+    "Country": "Nederland",
+    "Phone": "0612345678",
+    "IsActive": true
+  },
+  {
+    "CustomerId": 6,
+    "CustomerName": "Manas",
+    "Address": "Kroezelaan",
+    "City": "Utrecht",
+    "Region": "Utrecht",
+    "PostalCode": "3511BB",
+    "Country": "Nederland",
+    "Phone": "0612345678",
+    "IsActive": false
+  },
+  {
+    "CustomerId": 7,
+    "CustomerName": "Vishal",
+    "Address": "Kroezelaan",
+    "City": "Utrecht",
+    "Region": "Utrecht",
+    "PostalCode": "3511BB",
+    "Country": "Nederland",
+    "Phone": "0612345678",
+    "IsActive": false
+  },
+  {
+    "CustomerId": 8,
+    "CustomerName": "Vikas",
+    "Address": "Fifth Street",
+    "City": "Eindhoven",
+    "Region": "Brabant",
+    "PostalCode": "5600AA",
+    "Country": "Nederland",
+    "Phone": "0612345678",
+    "IsActive": true
+  },
+  {
+    "CustomerId": 9,
+    "CustomerName": "Sowjanya",
+    "Address": "Sixth Street",
+    "City": "Eindhoven",
+    "Region": "Brabant",
+    "PostalCode": "5600AA",
+    "Country": "Nederland",
+    "Phone": "0612345678",
+    "IsActive": true
+  },
+  {
+    "CustomerId": 10,
+    "CustomerName": "Kiran",
+    "Address": "De Run",
+    "City": "Veldhoven",
+    "Region": "Brabant",
+    "PostalCode": "5504DR",
+    "Country": "Nederland",
+    "Phone": "0612345678",
+    "IsActive": false
+  }
+]

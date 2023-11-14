@@ -17,36 +17,6 @@ namespace CustomerControls
 
         private void CustomerView_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            LostFocus += CustomerView_LostFocus;
-            LostMouseCapture += CustomerView_LostMouseCapture;
-            MouseLeave += CustomerView_MouseLeave;
-        }
-
-        private void CustomerView_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            if (e.OriginalSource is UIElement)
-            {
-                return;
-            }
-            SaveVisual(this);
-        }
-
-        private void CustomerView_LostMouseCapture(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            if (e.OriginalSource is UIElement)
-            {
-                return;
-            }
-            SaveVisual(this);
-        }
-
-        private void CustomerView_LostFocus(object sender, System.Windows.RoutedEventArgs e)
-        {
-            if (e.OriginalSource is UIElement)
-            {
-                return;
-            }
-            SaveVisual(this);
         }
 
         public void OnSave()

@@ -62,19 +62,6 @@ namespace BcWPFCustomControls.Controls
                 typeof(TariffComboBox),
                 new PropertyMetadata());
 
-        public string SelectedValueMemberPath
-        {
-            get => (string)GetValue(SelectedValueMemberPathProperty);
-            set => SetValue(SelectedValueMemberPathProperty, value);
-        }
-
-        public static readonly DependencyProperty SelectedValueMemberPathProperty =
-            DependencyProperty.Register(
-                nameof(SelectedValueMemberPath),
-                typeof(string),
-                typeof(TariffComboBox),
-                new PropertyMetadata(string.Empty));
-
         private void TariffComboBox_Loaded(object sender, RoutedEventArgs e)
         {
             DropDownOpened += TariffComboBox_DropDownOpened;
@@ -83,10 +70,6 @@ namespace BcWPFCustomControls.Controls
             KeyDown += TariffComboBox_KeyDown;
             KeyUp += TariffComboBox_KeyUp;
             SelectionChanged += TariffComboBox_SelectionChanged;
-            if (SelectedValueMemberPath != null)
-            {
-                TextSearch.SetTextPath(this, SelectedValueMemberPath);
-            }
             itemsSource = ItemsSource;
         }
 
@@ -102,20 +85,6 @@ namespace BcWPFCustomControls.Controls
 
         private void TariffComboBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (IsReadOnly)
-            {
-                return;
-            }
-            if (SelectedValueMemberPath != null)
-            {
-                TextSearch.SetTextPath(this, null);
-                Text = GetMember(DisplayMemberPath);
-                if (!(e.OriginalSource is TextBox box))
-                {
-                    return;
-                }
-                box.SelectAll();
-            }
         }
 
         private void TariffComboBox_LostFocus(object sender, RoutedEventArgs e)
@@ -134,7 +103,6 @@ namespace BcWPFCustomControls.Controls
             if (SelectedIndex == -1 || item.Text != (SelectedItem as DataRowView)?[DisplayMemberPath] as string)
             {
                 item.Text = string.Empty;
-                SearchText = string.Empty;
                 SelectedValue = string.Empty;
                 var bindingExpression = GetBindingExpression(SelectedValueProperty);
                 if (bindingExpression == null)
@@ -144,12 +112,8 @@ namespace BcWPFCustomControls.Controls
                 }
                 bindingExpression.UpdateSource();
             }
-            if (!string.IsNullOrEmpty(SelectedValueMemberPath))
-            {
-                TextSearch.SetTextPath(this, SelectedValueMemberPath);
-            }
-            SetSelectedValueMemberPath();
-            SearchText = string.Empty;
+            searchText = string.Empty;
+            ItemsSource = itemsSource;
         }
 
         private void TariffComboBox_KeyDown(object sender, KeyEventArgs e)
@@ -186,6 +150,22 @@ namespace BcWPFCustomControls.Controls
         {
             if (!(e.OriginalSource is TextBox item))
             {
+                e.Handled = false;
+                return;
+            }
+
+            if (e.Key.Equals(Key.Up) 
+                || e.Key.Equals(Key.Down) 
+                || e.Key.Equals(Key.Left) 
+                || e.Key.Equals(Key.Right) 
+                || e.Key.Equals(Key.Enter)
+                || e.Key.Equals(Key.PageDown)
+                || e.Key.Equals(Key.PageUp)
+                || e.Key.Equals(Key.Insert)
+                || e.Key.Equals(Key.Delete)
+                || e.Key.Equals(Key.Escape))
+            {
+                e.Handled = false;
                 return;
             }
             SearchText = item.Text;
@@ -199,21 +179,6 @@ namespace BcWPFCustomControls.Controls
 
         private void TariffComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (HasEffectiveKeyboardFocus)
-            {
-                return;
-            }
-            SetSelectedValueMemberPath();
-            e.Handled = true;
-        }
-
-        private void SetSelectedValueMemberPath()
-        {
-            if (string.IsNullOrEmpty(SelectedValueMemberPath))
-            {
-                return;
-            }
-            Text = GetMember(SelectedValueMemberPath);
         }
 
         private string GetMember(string path)
@@ -240,13 +205,19 @@ namespace BcWPFCustomControls.Controls
                     return;
                 }
                 searchText = value;
+                SelectedIndex = -1;
                 FilterItemsSource();
+                Text = searchText;
             }
         }
 
         private void FilterItemsSource()
         {
-            ItemsSource = string.IsNullOrEmpty(SearchText) ? itemsSource : GetFilteredItemSource();
+            ItemsSource = string.IsNullOrEmpty(SearchText) 
+                ? itemsSource 
+                : SearchText.Length < MinimumDropDownLength
+                    ? itemsSource
+                    : GetFilteredItemSource();
         }
 
         private IEnumerable GetFilteredItemSource()

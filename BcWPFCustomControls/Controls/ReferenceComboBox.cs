@@ -1,4 +1,5 @@
 ﻿using BcWpfCommon.Commands;
+using BcWPFCustomControls.Controls.Enums;
 using BOSSAutoRef.Factory;
 using System;
 using System.Collections;
@@ -129,6 +130,32 @@ namespace BcWPFCustomControls.Controls
                 typeof(ReferenceComboBox),
                 new PropertyMetadata(string.Empty));
 
+        public bool OpenDropDownOnEnterKeyOnly
+        {
+            get => (bool)GetValue(OpenDropDownOnEnterKeyOnlyProperty);
+            set => SetValue(OpenDropDownOnEnterKeyOnlyProperty, value);
+        }
+
+        public static readonly DependencyProperty OpenDropDownOnEnterKeyOnlyProperty =
+            DependencyProperty.Register(
+                nameof(OpenDropDownOnEnterKeyOnly),
+                typeof(bool),
+                typeof(ReferenceComboBox),
+                new PropertyMetadata(true));
+
+        public FilterMethods FilterMethod
+        {
+            get => (FilterMethods)GetValue(FilterMethodProperty);
+            set => SetValue(FilterMethodProperty, value);
+        }
+
+        public static readonly DependencyProperty FilterMethodProperty =
+            DependencyProperty.Register(
+                nameof(FilterMethod),
+                typeof(FilterMethods),
+                typeof(ReferenceComboBox),
+                new PropertyMetadata(FilterMethods.Contains));
+
 
         private void ReferenceComboBox_Loaded(object sender, RoutedEventArgs e)
         {
@@ -140,12 +167,13 @@ namespace BcWPFCustomControls.Controls
             KeyDown += ReferenceComboBox_KeyDown;
             KeyUp += ReferenceComboBox_KeyUp;
             SelectionChanged += ReferenceComboBox_SelectionChanged;
-            if (SelectedValueMemberPath != null)
+            DropDownOpened += ReferenceComboBox_DropDownOpened;
+            if (SelectedValueMemberPath == null)
             {
-                TextSearch.SetTextPath(this, SelectedValueMemberPath);
-                SetSelectedValueMemberPath();
+                return;
             }
-
+            TextSearch.SetTextPath(this, SelectedValueMemberPath);
+            SetSelectedValueMemberPath();
         }
 
         private DataTable CreateDataTable()
@@ -263,24 +291,62 @@ namespace BcWPFCustomControls.Controls
 
         private void ReferenceComboBox_KeyUp(object sender, KeyEventArgs e)
         {
+            //if (IsNavigation(e.Key))
+            //{
+            //    return;
+            //}
             if (!(e.OriginalSource is TextBox item))
             {
                 return;
             }
-            if (!e.Key.Equals(Key.Enter))
+            if (OpenDropDownOnEnterKeyOnly && !e.Key.Equals(Key.Enter))
             {
                 return;
             }
             SearchText = item.Text;
-            var count = ItemsSource.OfType<DataRowView>().Count();
-            if (count == 1)
+            if (string.IsNullOrEmpty(item.Text))
             {
-                SelectedIndex = 0;
+                if (!string.IsNullOrEmpty(SearchText))
+                {
+                    item.Text = SearchText;
+                }
+                SelectedIndex = -1;
+            }
+            IsDropDownOpen = true;
+            if (!e.Key.Equals(Key.Back))
+            {
+                item.Select(item.Text.Length, 0);
             }
             else
             {
-                IsDropDownOpen = true;
+                SelectedIndex = -1;
             }
+        }
+
+        private static bool IsNavigation(Key key)
+        {
+            return key.Equals(Key.Tab) || 
+                   key.Equals(Key.LeftShift) || 
+                   key.Equals(Key.RightShift) ||
+                   key.Equals(Key.Up) ||
+                   key.Equals(Key.Down) ||
+                   key.Equals(Key.Left) ||
+                   key.Equals(Key.Right) ||
+                   key.Equals(Key.PageUp) ||
+                   key.Equals(Key.PageDown) ||
+                   key.Equals(Key.Home) ||
+                   key.Equals(Key.End);
+        }
+
+        private void ReferenceComboBox_DropDownOpened(object sender, EventArgs e)
+        {
+            if (IsReadOnly || OpenDropDownOnEnterKeyOnly)
+            {
+                return;
+            }
+
+            SearchText = string.Empty;
+            IsDropDownOpen = true;
         }
 
         private void ReferenceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -416,12 +482,23 @@ namespace BcWPFCustomControls.Controls
         {
             foreach (DataRowView row in itemsSource)
             {
-                if (row[DisplayMemberPath]
-                    .ToString()
-                    .IndexOf(SearchText, StringComparison.InvariantCultureIgnoreCase) > -1)
+                if (Filter(row[DisplayMemberPath].ToString()))
                 {
                     yield return row;
                 }
+            }
+        }
+
+        private bool Filter(string value)
+        {
+            switch (FilterMethod)
+            {
+                case FilterMethods.Contains:
+                    return value.IndexOf(SearchText, StringComparison.InvariantCultureIgnoreCase) > -1;
+                case FilterMethods.StartsWith:
+                    return value.StartsWith(SearchText, StringComparison.InvariantCultureIgnoreCase);
+                default:
+                    return false;
             }
         }
 

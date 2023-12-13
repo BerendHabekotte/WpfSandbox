@@ -1,5 +1,5 @@
 ﻿using System.Data;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace CustomerControls
 {
@@ -9,10 +9,10 @@ namespace CustomerControls
         public CustomerModel()
         {
             var json = BOSSAutoRef.Data.ReferenceData.GetTariffData();
-            var table = (DataTable)JsonConvert.DeserializeObject(json, (typeof(DataTable)));
+            var table = (DataTable)JsonSerializer.Deserialize(json, typeof(DataTable));
             tariffs = table?.AsDataView();
         }
-        public int CustomerId { get; set; }
+        public int? CustomerId { get; set; }
         
         public string CustomerName { get; set; }
 

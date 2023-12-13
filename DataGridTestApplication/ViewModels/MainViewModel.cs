@@ -1,12 +1,11 @@
-﻿using System;
-using BcWpfCommon.Commands;
+﻿using BcWpfCommon.Commands;
 using DataGridTestApplication.Models;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Windows.Input;
 
 namespace DataGridTestApplication.ViewModels
@@ -57,7 +56,7 @@ namespace DataGridTestApplication.ViewModels
                 return;
             }
             var text = File.ReadAllText("Data\\Customers.json");
-            var customers = JsonConvert.DeserializeObject<List<Customer>>(text);
+            var customers = JsonSerializer.Deserialize<List<Customer>>(text);
             Customers = new ObservableCollection<Customer>(customers);
             var selectedCustomer = Customers.FirstOrDefault();
             selectedIndex = Customers.IndexOf(selectedCustomer);

@@ -69,8 +69,9 @@
     <Compile Include="Controls\BossCustomComboBox.cs" />
     <Compile Include="Controls\BossTextBox.cs" />
     <Compile Include="Controls\BossTextBoxControl.cs" />
-    <Compile Include="Controls\ReferenceComboBox.cs" />
+    <Compile Include="Controls\Enums\FilterMethods.cs" />
     <Compile Include="Controls\TariffComboBox.cs" />
+    <Compile Include="Controls\ReferenceComboBox.cs" />
     <Compile Include="DataGridPopup.xaml.cs">
       <DependentUpon>DataGridPopup.xaml</DependentUpon>
     </Compile>
@@ -151,6 +152,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

@@ -5,12 +5,13 @@ using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 
 namespace CustomerControls
 {
-    public class CustomerViewModel : INotifyPropertyChanged
+    public class CustomerViewModel : INotifyPropertyChanged, IDataErrorInfo
     {
         private CustomerModel model;
 
@@ -25,7 +26,7 @@ namespace CustomerControls
                     return;
                 if (value == string.Empty)
                 {
-                    model.CustomerId = 0;
+                    model.CustomerId = null;
                 }
                 else if (int.TryParse(value, out int customerId))
                 {
@@ -41,8 +42,11 @@ namespace CustomerControls
             set
             {
                 if (value == model.CustomerName)
+                {
                     return;
-                model.CustomerName = value;
+                }
+                
+                model.CustomerName = string.Join("", value.Where(char.IsDigit));
                 OnPropertyChanged(null);
                 //OnPropertyChanged("Name");
                 //OnPropertyChanged("IsDutchName");
@@ -235,6 +239,23 @@ namespace CustomerControls
             => new ActionCommand<object>(
                     OnLostFocusExecute,
                     param => true);
+
+        public string Error => null;
+
+        public string this[string columnName]
+        {
+            get
+            {
+                if (!columnName.Equals(nameof(Name)))
+                {
+                    return null;
+                }
+                var regex = new Regex("^[0-9]+$");
+                return regex.IsMatch(Name) 
+                    ? null 
+                    : "Name can only contain digits";
+            }
+        }
 
         private void OnLostFocusExecute(object obj)
         {

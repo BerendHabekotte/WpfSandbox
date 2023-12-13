@@ -348,7 +348,7 @@
         <Setter Property="IsTextSearchEnabled" Value="False"/>
         <Style.Triggers>
             <Trigger Property="IsEditable" Value="true">
-                <Setter Property="IsTabStop" Value="false"/>
+                <Setter Property="IsTabStop" Value="True"/>
                 <Setter Property="Padding" Value="2"/>
                 <Setter Property="Template" Value="{StaticResource ComboBoxEditableTemplate}"/>
             </Trigger>

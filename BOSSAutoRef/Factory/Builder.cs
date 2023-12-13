@@ -1,44 +1,40 @@
 ﻿using BOSSAutoRef.Data;
 using Microsoft.VisualBasic.CompilerServices;
-using Newtonsoft.Json;
 using System;
 using System.Data;
-using System.Data.Common;
-using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace BOSSAutoRef.Factory
 {
     public class Builder : DataSet
     {
-        private static Builder moInstance = null;
-        private static object moLockObject = RuntimeHelpers.GetObjectValue(new object());
-        private static bool mbTestInstance = false;
+        private static Builder builder;
+        private static object lockObject = RuntimeHelpers.GetObjectValue(new object());
+        private const bool IsTestInstance = false;
 
         public static Builder GetInstance()
         {
-            object obj = moLockObject;
-            ObjectFlowControl.CheckForSyncLockOnValueType(obj);
+            ObjectFlowControl.CheckForSyncLockOnValueType(lockObject);
             bool lockTaken = false;
             try
             {
-                Monitor.Enter(obj, ref lockTaken);
-                if (moInstance == null)
+                Monitor.Enter(lockObject, ref lockTaken);
+                if (builder == null)
                 {
-                    moInstance = new Builder();
+                    builder = new Builder();
                 }
             }
             finally
             {
                 if (lockTaken)
                 {
-                    Monitor.Exit(obj);
+                    Monitor.Exit(lockObject);
                 }
             }
 
-            return moInstance;
+            return builder;
         }
 
         public DataView GetRefDataView(AutoRefTypes iRefType, string sByCode, string sByType, string sFilterDataBy, bool bIsSerialized)
@@ -77,7 +73,7 @@ namespace BOSSAutoRef.Factory
 
         private DataView BuildAutoRefDataView(AutoRefTypes iRefType, string sFilter = "", bool bIsSerialized = false)
         {
-            if (!Tables.Contains(iRefType.ToString()) && mbTestInstance)
+            if (!Tables.Contains(iRefType.ToString()) && IsTestInstance)
             {
                 return new DataTable(iRefType.ToString()).DefaultView;
             }
@@ -88,13 +84,13 @@ namespace BOSSAutoRef.Factory
             }
 
 
-            object obj = moLockObject;
+            object obj = lockObject;
             ObjectFlowControl.CheckForSyncLockOnValueType(obj);
             bool lockTaken = false;
             try
             {
                 Monitor.Enter(obj, ref lockTaken);
-                DataView dataView = base.DefaultViewManager.CreateDataView(base.Tables[iRefType.ToString()]);
+                DataView dataView = DefaultViewManager.CreateDataView(Tables[iRefType.ToString()]);
                 dataView.RowFilter = sFilter;
                 return dataView;
             }
@@ -116,13 +112,13 @@ namespace BOSSAutoRef.Factory
                     return;
                 }
 
-                object obj = moLockObject;
+                object obj = lockObject;
                 ObjectFlowControl.CheckForSyncLockOnValueType(obj);
                 bool lockTaken = false;
                 try
                 {
                     Monitor.Enter(obj, ref lockTaken);
-                    if (base.Tables.Contains(iRefType.ToString()))
+                    if (Tables.Contains(iRefType.ToString()))
                     {
                         return;
                     }
@@ -140,9 +136,12 @@ namespace BOSSAutoRef.Factory
                             json = string.Empty;
                             break;
                     }
-                    oTable = (DataTable)JsonConvert.DeserializeObject(json, (typeof(DataTable)));
-                    oTable.TableName = iRefType.ToString();
-                    Tables.Add(oTable);
+                    oTable = (DataTable)JsonSerializer.Deserialize(json, typeof(DataTable));
+                    if (oTable != null)
+                    {
+                        oTable.TableName = iRefType.ToString();
+                        Tables.Add(oTable);
+                    }
                 }
                 finally
                 {
@@ -156,9 +155,9 @@ namespace BOSSAutoRef.Factory
             {
                 ProjectData.SetProjectError(ex);
                 Exception ex2 = ex;
-                if (base.Tables.Contains(iRefType.ToString()))
+                if (Tables.Contains(iRefType.ToString()))
                 {
-                    base.Tables.Remove(iRefType.ToString());
+                    Tables.Remove(iRefType.ToString());
                 }
 
                 throw ex2;

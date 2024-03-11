@@ -6,8 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,6 +19,13 @@ namespace BcWPFCustomControls.Controls
     public class ReferenceComboBox : ComboBox, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private const string CustomDescriptionName = "CustomDescription";
+        private IEnumerable originalItemsSource;
+        private DataTable table;
+        private IEnumerable<string> customCodes;
+        private int oldSelectedIndex;
+        private bool hasCustomCodes;
 
         static ReferenceComboBox()
         {
@@ -65,6 +72,12 @@ namespace BcWPFCustomControls.Controls
                 typeof(ReferenceComboBox),
                 new PropertyMetadata());
 
+        public AutoRefTypes AutoRefType
+        {
+            get => (AutoRefTypes)GetValue(AutoRefTypeProperty);
+            set => SetValue(AutoRefTypeProperty, value);
+        }
+
         public static readonly DependencyProperty AutoRefTypeProperty =
             DependencyProperty.Register(
                 nameof(AutoRefType),
@@ -72,10 +85,10 @@ namespace BcWPFCustomControls.Controls
                 typeof(ReferenceComboBox),
                 new PropertyMetadata(AutoRefTypes.NONE));
 
-        public AutoRefTypes AutoRefType
+        public string AutoRefFilter
         {
-            get => (AutoRefTypes)GetValue(AutoRefTypeProperty);
-            set => SetValue(AutoRefTypeProperty, value);
+            get => (string)GetValue(AutoRefFilterProperty);
+            set => SetValue(AutoRefFilterProperty, value);
         }
 
         public static readonly DependencyProperty AutoRefFilterProperty =
@@ -85,11 +98,18 @@ namespace BcWPFCustomControls.Controls
                 typeof(ReferenceComboBox),
                 new PropertyMetadata(string.Empty, null));
 
-        public string AutoRefFilter
+        public string LookupFilter
         {
-            get => (string)GetValue(AutoRefFilterProperty);
-            set => SetValue(AutoRefFilterProperty, value);
+            get => (string)GetValue(LookupFilterProperty);
+            set => SetValue(LookupFilterProperty, value);
         }
+
+        public static readonly DependencyProperty LookupFilterProperty =
+            DependencyProperty.Register(
+                nameof(LookupFilter),
+                typeof(string),
+                typeof(ReferenceComboBox),
+                new PropertyMetadata(string.Empty, null));
 
         public string CustomDescriptionSeparator
         {
@@ -156,24 +176,54 @@ namespace BcWPFCustomControls.Controls
                 typeof(ReferenceComboBox),
                 new PropertyMetadata(FilterMethods.Contains));
 
-
         private void ReferenceComboBox_Loaded(object sender, RoutedEventArgs e)
         {
+            oldSelectedIndex = -1;
+            customCodes = GetCustomCodes();
+            hasCustomCodes = !customCodes.Count().Equals(0);
             table = CreateDataTable();
             CreateCustomDescriptionColumn();
-            itemsSource = ItemsSource = table.AsDataView();
+            originalItemsSource = ItemsSource = table.AsDataView();
             GotFocus += ReferenceComboBox_GotFocus;
             LostFocus += ReferenceComboBox_LostFocus;
-            KeyDown += ReferenceComboBox_KeyDown;
             KeyUp += ReferenceComboBox_KeyUp;
             SelectionChanged += ReferenceComboBox_SelectionChanged;
             DropDownOpened += ReferenceComboBox_DropDownOpened;
+            DropDownClosed += ReferenceComboBox_DropDownClosed;
             if (SelectedValueMemberPath == null)
             {
                 return;
             }
             TextSearch.SetTextPath(this, SelectedValueMemberPath);
             SetSelectedValueMemberPath();
+        }
+
+        private IEnumerable<string> GetCustomCodes()
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(LookupFilter))
+                {
+                    return new string[] { };
+                }
+                var lookupView = Builder.GetInstance().GetRefDataView(
+                    AutoRefTypes.TYPE_LocalLookupCodes,
+                    LookupFilter,
+                    "LPM",
+                    string.Empty,
+                    false);
+                if (lookupView == null)
+                {
+                    return new string[] { };
+                }
+                return !lookupView.Count.Equals(1)
+                    ? new string[] { }
+                    : lookupView[0].Row["Description"].ToString().Split('|');
+            }
+            catch
+            {
+                return new string[] { };
+            }
         }
 
         private DataTable CreateDataTable()
@@ -184,201 +234,24 @@ namespace BcWPFCustomControls.Controls
                 {
                     switch (ItemsSource)
                     {
-                        case DataView _:
-                            return ((DataView)ItemsSource).ToTable();
-                        default:
-                            return new DataTable();
+                        case DataView view: return view.ToTable();
+                        default: return new DataTable();
                     }
                 }
                 var dataView = Builder
                     .GetInstance()
-                    .GetRefDataView(AutoRefType, string.Empty, AutoRefFilter, string.Empty, false);
+                    .GetRefDataView(
+                        AutoRefType,
+                        string.Empty,
+                        AutoRefFilter,
+                        string.Empty,
+                        false);
                 return dataView.ToTable();
             }
             catch
             {
                 return new DataTable();
             }
-        }
-
-        private void ReferenceComboBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            if (IsReadOnly)
-            {
-                return;
-            }
-
-            if (SelectedValueMemberPath == null)
-            {
-                return;
-            }
-            TextSearch.SetTextPath(this, null);
-            Text = GetMember(DisplayMemberPath);
-            switch (e.OriginalSource)
-            {
-                case ComboBox box:
-                    (box.SelectionBoxItem as TextBox)?.SelectAll();
-                    break;
-                case TextBox box:
-                    box.SelectAll();
-                    break;
-            }
-        }
-
-        private void ReferenceComboBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            if (IsReadOnly)
-            {
-                return;
-            }
-
-            if (!(e.OriginalSource is TextBox item))
-            {
-                return;
-            }
-
-            IsDropDownOpen = false;
-            if (SelectedIndex == -1 || item.Text != (SelectedItem as DataRowView)?[DisplayMemberPath] as string)
-            {
-                item.Text = string.Empty;
-                SearchText = string.Empty;
-                SelectedValue = string.Empty;
-                var bindingExpression = GetBindingExpression(SelectedValueProperty);
-                if (bindingExpression == null)
-                {
-                    SearchText = string.Empty;
-                    return;
-                }
-                bindingExpression.UpdateSource();
-            }
-            if (!string.IsNullOrEmpty(SelectedValueMemberPath))
-            {
-                TextSearch.SetTextPath(this, SelectedValueMemberPath);
-            }
-            SetSelectedValueMemberPath();
-            SearchText = string.Empty;
-        }
-
-        private void ReferenceComboBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (IsReadOnly)
-            {
-                return;
-            }
-            if (e.Key == Key.Tab)
-            {
-                if (!(e.OriginalSource is TextBox item))
-                {
-                    return;
-                }
-                if (string.IsNullOrEmpty(item.Text))
-                {
-                    return;
-                }
-                if (SelectedIndex == -1 || item.Text != GetMember(DisplayMemberPath))
-                {
-                    SetSelectedIndexOnTabOut(item.Text);
-                }
-                return;
-            }
-            if (e.Key != Key.Escape)
-            {
-                return;
-            }
-            var bindingExpression = GetBindingExpression(SelectedValueProperty);
-            bindingExpression?.UpdateTarget();
-        }
-
-        private void ReferenceComboBox_KeyUp(object sender, KeyEventArgs e)
-        {
-            //if (IsNavigation(e.Key))
-            //{
-            //    return;
-            //}
-            if (!(e.OriginalSource is TextBox item))
-            {
-                return;
-            }
-            if (OpenDropDownOnEnterKeyOnly && !e.Key.Equals(Key.Enter))
-            {
-                return;
-            }
-            SearchText = item.Text;
-            if (string.IsNullOrEmpty(item.Text))
-            {
-                if (!string.IsNullOrEmpty(SearchText))
-                {
-                    item.Text = SearchText;
-                }
-                SelectedIndex = -1;
-            }
-            IsDropDownOpen = true;
-            if (!e.Key.Equals(Key.Back))
-            {
-                item.Select(item.Text.Length, 0);
-            }
-            else
-            {
-                SelectedIndex = -1;
-            }
-        }
-
-        private static bool IsNavigation(Key key)
-        {
-            return key.Equals(Key.Tab) || 
-                   key.Equals(Key.LeftShift) || 
-                   key.Equals(Key.RightShift) ||
-                   key.Equals(Key.Up) ||
-                   key.Equals(Key.Down) ||
-                   key.Equals(Key.Left) ||
-                   key.Equals(Key.Right) ||
-                   key.Equals(Key.PageUp) ||
-                   key.Equals(Key.PageDown) ||
-                   key.Equals(Key.Home) ||
-                   key.Equals(Key.End);
-        }
-
-        private void ReferenceComboBox_DropDownOpened(object sender, EventArgs e)
-        {
-            if (IsReadOnly || OpenDropDownOnEnterKeyOnly)
-            {
-                return;
-            }
-
-            SearchText = string.Empty;
-            IsDropDownOpen = true;
-        }
-
-        private void ReferenceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (HasEffectiveKeyboardFocus)
-            {
-                return;
-            }
-            SetSelectedValueMemberPath();
-            e.Handled = true;
-        }
-
-        private void SetSelectedValueMemberPath()
-        {
-            if (string.IsNullOrEmpty(SelectedValueMemberPath))
-            {
-                return;
-            }
-            Text = GetMember(SelectedValueMemberPath);
-        }
-
-        private string GetMember(string path)
-        {
-            if (SelectedIndex == -1)
-            {
-                return string.Empty;
-            }
-            string result = ItemsSource
-                .OfType<DataRowView>()
-                .ToList()[SelectedIndex][path]
-                .ToString();
-            return result;
         }
 
         private void CreateCustomDescriptionColumn()
@@ -401,11 +274,7 @@ namespace BcWPFCustomControls.Controls
                 return CreateDefaultCustomDescriptionFields();
             }
             var result = CreateSpecificCustomDescriptionFields();
-            if (result.Length == 0)
-            {
-                return CreateDefaultCustomDescriptionFields();
-            }
-            return result;
+            return result.Length == 0 ? CreateDefaultCustomDescriptionFields() : result;
         }
 
         private string[] CreateDefaultCustomDescriptionFields()
@@ -415,21 +284,14 @@ namespace BcWPFCustomControls.Controls
                 "Code",
                 "Description"
             };
-            if (table.Columns.Contains("OriginalDescription"))
+            if (!table.Columns.Contains("OriginalDescription"))
             {
-                var areEqual = true;
-                foreach (DataRow row in table.Rows)
-                {
-                    areEqual = row["Description"].ToString().Equals(row["OriginalDescription"].ToString());
-                    if (!areEqual)
-                    {
-                        break;
-                    }
-                }
-                if (!areEqual)
-                {
-                    fields.Add("OriginalDescription");
-                }
+                return fields.ToArray();
+            }
+            if (table.Rows.Cast<DataRow>()
+                .Any(row => !row["Description"].ToString().Equals(row["OriginalDescription"].ToString())))
+            {
+                fields.Add("OriginalDescription");
             }
             return fields.ToArray();
         }
@@ -437,15 +299,7 @@ namespace BcWPFCustomControls.Controls
         private string[] CreateSpecificCustomDescriptionFields()
         {
             var rawFields = CustomDescriptionFields.Split('|');
-            var fields = new List<string>();
-            foreach (var field in rawFields)
-            {
-                if (table.Columns.Contains(field))
-                {
-                    fields.Add(field);
-                }
-            }
-            return fields.ToArray();
+            return rawFields.Where(field => table.Columns.Contains(field)).ToArray();
         }
 
         private void FillCustomDescriptionColumn(DataRow row, string[] customDescriptionFields)
@@ -462,49 +316,96 @@ namespace BcWPFCustomControls.Controls
             row["CustomDescription"] = builder.ToString();
         }
 
-        private string searchText;
-        public string SearchText
+        private void SetSelectedValueMemberPath()
         {
-            get => searchText;
-            set
+            if (string.IsNullOrEmpty(SelectedValueMemberPath))
             {
-                searchText = value;
-                FilterItemsSource();
+                return;
+            }
+            Text = GetMember(SelectedValueMemberPath);
+            Trace.WriteLine($"{DateTime.Now} - SetSelectedValueMemberPath: Text: {Text}.");
+        }
+
+        private string GetMember(string path)
+        {
+            if (SelectedIndex == -1)
+            {
+                return string.Empty;
+            }
+            var result = ItemsSource
+                .OfType<DataRowView>()
+                .ToList()[SelectedIndex][path]
+                .ToString();
+            return result;
+        }
+
+        private void ReferenceComboBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (IsReadOnly)
+            {
+                return;
+            }
+            if (SelectedValueMemberPath == null)
+            {
+                return;
+            }
+            TextSearch.SetTextPath(this, null);
+            if (SelectedIndex != -1)
+            {
+                Text = GetMember(DisplayMemberPath);
+            }
+            Trace.WriteLine($"{DateTime.Now} - ReferenceComboBox_GotFocus: Text: {Text}.");
+            switch (e.OriginalSource)
+            {
+                case ComboBox box:
+                    (box.SelectionBoxItem as TextBox)?.SelectAll();
+                    break;
+                case TextBox box:
+                    box.SelectAll();
+                    break;
             }
         }
 
-        private void FilterItemsSource()
+        private void ReferenceComboBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            ItemsSource = string.IsNullOrEmpty(SearchText) ? itemsSource : GetFilteredItemSource();
-        }
-
-        private IEnumerable GetFilteredItemSource()
-        {
-            foreach (DataRowView row in itemsSource)
+            if (IsReadOnly)
             {
-                if (Filter(row[DisplayMemberPath].ToString()))
-                {
-                    yield return row;
-                }
+                return;
             }
-        }
-
-        private bool Filter(string value)
-        {
-            switch (FilterMethod)
+            if (!(e.OriginalSource is TextBox))
             {
-                case FilterMethods.Contains:
-                    return value.IndexOf(SearchText, StringComparison.InvariantCultureIgnoreCase) > -1;
-                case FilterMethods.StartsWith:
-                    return value.StartsWith(SearchText, StringComparison.InvariantCultureIgnoreCase);
-                default:
-                    return false;
+                return;
             }
+            IsDropDownOpen = false;
+            SetSelectedIndexOnLostFocus();
+            ItemsSource = originalItemsSource;
+            RestoreOldValue();
+            if (SelectedIndex == -1 || Text != (SelectedItem as DataRowView)?[DisplayMemberPath] as string)
+            {
+                Text = string.Empty;
+                SelectedValue = string.Empty;
+                Trace.WriteLine($"{DateTime.Now} - ReferenceComboBox_LostFocus: Text: {Text}.");
+            }
+            if (!string.IsNullOrEmpty(SelectedValueMemberPath))
+            {
+                TextSearch.SetTextPath(this, SelectedValueMemberPath);
+            }
+            SetSelectedValueMemberPath();
+            var bindingExpression1 = GetBindingExpression(SelectedValueProperty);
+            bindingExpression1?.UpdateSource();
         }
 
-        private void SetSelectedIndexOnTabOut(string value)
+        private void SetSelectedIndexOnLostFocus()
         {
-            SearchText = value;
+            if (string.IsNullOrEmpty(Text))
+            {
+                return;
+            }
+            if (SelectedItem is DataRowView selectedItem && selectedItem[DisplayMemberPath].Equals(Text))
+            {
+                return;
+            }
+            FilterItemsSource();
             var count = ItemsSource.OfType<DataRowView>().Count();
             if (count == 1)
             {
@@ -512,62 +413,194 @@ namespace BcWPFCustomControls.Controls
             }
         }
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void RestoreOldValue()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            if (!MustOldValueBeRestored())
+            {
+                oldSelectedIndex = -1;
+                return;
+            }
+            SelectedIndex = oldSelectedIndex;
+            oldSelectedIndex = -1;
+            Text = ((DataRowView)SelectedItem)[DisplayMemberPath].ToString();
+            Trace.WriteLine($"{DateTime.Now} - RestoreOldValue: Text: {Text}.");
         }
 
-        private UserControl popUpContent;
-
-        public UserControl PopUpContent
+        private bool MustOldValueBeRestored()
         {
-            get => popUpContent;
-            set
+            if (!hasCustomCodes)
             {
-                popUpContent = value;
-                OnPropertyChanged();
+                return false;
+            }
+            if (oldSelectedIndex.Equals(-1))
+            {
+                return false;
+            }
+            if (SelectedIndex.Equals(-1))
+            {
+                return true;
+            }
+            return !Text.Equals((SelectedItem as DataRowView)?[DisplayMemberPath] as string);
+        }
+
+        private void ReferenceComboBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (IsReadOnly)
+            {
+                return;
+            }
+            switch (e.Key)
+            {
+                case Key.Up:
+                case Key.Down:
+                    if (!IsDropDownOpen)
+                    {
+                        FilterItemsSource(false);
+                    }
+                    return;
+                case Key.Tab:
+                case Key.LeftShift:
+                case Key.RightShift:
+                case Key.Left:
+                case Key.Right:
+                case Key.PageUp:
+                case Key.PageDown:
+                case Key.Home:
+                case Key.End:
+                    return;
+                case Key.Escape:
+                    var bindingExpression = GetBindingExpression(SelectedValueProperty);
+                    bindingExpression?.UpdateTarget();
+                    return;
+                case Key.Enter:
+                    break;
+                default:
+                    if (OpenDropDownOnEnterKeyOnly && !IsDropDownOpen)
+                    {
+                        return;
+                    }
+                    break;
+            }
+            OpenDropDown(e);
+        }
+
+        private void OpenDropDown(KeyEventArgs e)
+        {
+            if (string.IsNullOrEmpty(Text))
+            {
+                SelectedIndex = -1;
+            }
+            if (IsDropDownOpen)
+            {
+                FilterItemsSource();
+            }
+            IsDropDownOpen = true;
+            if (e.OriginalSource is TextBox item)
+            {
+                item.Select(Text.Length, 0);
             }
         }
 
-        private bool isPopupOpen;
-
-        public bool IsPopupOpen
+        private void ReferenceComboBox_DropDownOpened(object sender, EventArgs e)
         {
-            get => isPopupOpen;
-            set
+            if (!HasEffectiveKeyboardFocus)
             {
-                isPopupOpen = value;
-                OnPropertyChanged();
+                Text = GetMember(DisplayMemberPath);
+                Trace.WriteLine($"{DateTime.Now} - ReferenceComboBox_DropDownOpened: Text: {Text}.");
+            }
+            SetOldSelectedIndex();
+            FilterItemsSource();
+        }
+
+        private void SetOldSelectedIndex()
+        {
+            if (!hasCustomCodes)
+            {
+                return;
+            }
+            if (!oldSelectedIndex.Equals(-1))
+            {
+                return;
+            }
+            if (ItemsSource.Equals(originalItemsSource))
+            {
+                oldSelectedIndex = SelectedIndex;
             }
         }
 
-        private string popUpGridSelectedValue;
-
-        public string PopUpGridSelectedValue
+        private void ReferenceComboBox_DropDownClosed(object sender, EventArgs e)
         {
-            get => popUpGridSelectedValue;
-            set
+            ItemsSource = originalItemsSource;
+        }
+
+        private void ReferenceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (HasEffectiveKeyboardFocus)
             {
-                popUpGridSelectedValue = value;
-                OnPropertyChanged();
+                return;
+            }
+            SetSelectedValueMemberPath();
+            e.Handled = true;
+        }
+
+        private void FilterItemsSource(bool filterText = true)
+        {
+            var originalText = Text;
+            Trace.WriteLine($"{DateTime.Now} - FilterItemsSource Start: originalText: {originalText}.");
+            var items = ItemsSource.Cast<DataRowView>().ToArray();
+            if (filterText && items.Length > 0)
+            {
+                filterText = !(SelectedIndex >= 0 && Text.Equals(items[SelectedIndex][DisplayMemberPath]));
+            }
+            ItemsSource = originalItemsSource
+                .Cast<DataRowView>()
+                .Where(r => FilterCustomCodes(r) && FilterText(r, filterText));
+            Text = originalText;
+            Trace.WriteLine($"{DateTime.Now} - FilterItemsSource End: Text: {Text}.");
+        }
+
+        private bool FilterCustomCodes(DataRowView row)
+        {
+            if (!hasCustomCodes)
+            {
+                return true;
+            }
+            var code = row[SelectedValuePath].ToString();
+            return customCodes.Any(c => c.Equals(code));
+        }
+
+        private bool FilterText(DataRowView row, bool filterText)
+        {
+            if (!filterText)
+            {
+                return true;
+            }
+
+            if (string.IsNullOrEmpty(Text))
+            {
+                return true;
+            }
+            var value = row[DisplayMemberPath].ToString();
+            switch (FilterMethod)
+            {
+                case FilterMethods.Contains:
+                    return value.IndexOf(Text, StringComparison.InvariantCultureIgnoreCase) > -1;
+                case FilterMethods.StartsWith:
+                    return value.StartsWith(Text, StringComparison.InvariantCultureIgnoreCase);
+                default:
+                    return false;
             }
         }
 
         public ICommand ComboBoxMouseDoubleClick => new ActionCommand<object>(ComboBoxMouseDoubleClickAction, param => true);
 
-        public ICommand PopUpGridSelectedItemDoubleClick => new ActionCommand<object>(PopUpGridSelectedItemDoubleClickAction, param => true);
-
-        public ICommand ClosePopup => new ActionCommand<object>(ClosePopupClickAction, param => true);
-
-        private void ClosePopupClickAction(object obj)
-        {
-            IsPopupOpen = false;
-        }
-
         private void ComboBoxMouseDoubleClickAction(object obj)
         {
             if (IsReadOnly)
+            {
                 return;
+            }
+            FilterItemsSource(false);
             var dialog = new DataGridPopup(ItemsSource);
             var dialogResult = dialog.ShowDialog() ?? false;
             if (dialogResult)
@@ -575,16 +608,5 @@ namespace BcWPFCustomControls.Controls
                 SelectedValue = dialog.SelectedValue;
             }
         }
-
-        private void PopUpGridSelectedItemDoubleClickAction(object obj)
-        {
-            SelectedValue = PopUpGridSelectedValue;
-            IsPopupOpen = false;
-        }
-
-        private const string CustomDescriptionName = "CustomDescription";
-
-        private IEnumerable itemsSource;
-        private DataTable table;
     }
 }

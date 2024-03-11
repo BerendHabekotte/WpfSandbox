@@ -3,7 +3,7 @@ using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Data;
 using System.Runtime.CompilerServices;
-using System.Text.Json;
+using Newtonsoft.Json;
 using System.Threading;
 
 namespace BOSSAutoRef.Factory
@@ -129,6 +129,9 @@ namespace BOSSAutoRef.Factory
                         case AutoRefTypes.TYPE_BrokStatusValue:
                             json = ReferenceData.GetBrokerageStatusValues();
                             break;
+                        case AutoRefTypes.TYPE_LocalLookupCodes:
+                            json = ReferenceData.GetLocalLookupCodes();
+                            break;
                         case AutoRefTypes.TYPE_MeasurementUnits:
                             json = ReferenceData.GetMeasurementUnits();
                             break;
@@ -136,12 +139,13 @@ namespace BOSSAutoRef.Factory
                             json = string.Empty;
                             break;
                     }
-                    oTable = (DataTable)JsonSerializer.Deserialize(json, typeof(DataTable));
-                    if (oTable != null)
+                    oTable = (DataTable)JsonConvert.DeserializeObject(json, (typeof(DataTable)));
+                    if (oTable == null)
                     {
-                        oTable.TableName = iRefType.ToString();
-                        Tables.Add(oTable);
+                        return;
                     }
+                    oTable.TableName = iRefType.ToString();
+                    Tables.Add(oTable);
                 }
                 finally
                 {
@@ -170,6 +174,7 @@ namespace BOSSAutoRef.Factory
             {
                 case AutoRefTypes.TYPE_BrokStatusValue: 
                 case AutoRefTypes.TYPE_MeasurementUnits:
+                case AutoRefTypes.TYPE_LocalLookupCodes:
                     return true;
                 default: return false;
             }

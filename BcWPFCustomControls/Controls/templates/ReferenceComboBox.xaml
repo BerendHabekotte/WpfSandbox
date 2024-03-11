@@ -245,6 +245,9 @@
                 <Setter Property="MaxDropDownHeight" Value="0" />
                 <Setter Property="IsTabStop" Value="False"/>
             </Trigger>
+            <Trigger Property="IsReadOnly" Value="False">
+                <Setter Property="IsTabStop" Value="True"/>
+            </Trigger>
             <Trigger Property="IsEnabled" Value="false">
                 <Setter Property="Opacity" TargetName="border" Value="0.56"/>
             </Trigger>
@@ -348,7 +351,7 @@
         <Setter Property="IsTextSearchEnabled" Value="False"/>
         <Style.Triggers>
             <Trigger Property="IsEditable" Value="true">
-                <Setter Property="IsTabStop" Value="True"/>
+                <Setter Property="IsTabStop" Value="false"/>
                 <Setter Property="Padding" Value="2"/>
                 <Setter Property="Template" Value="{StaticResource ComboBoxEditableTemplate}"/>
             </Trigger>

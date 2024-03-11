@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace BOSSAutoRef.Data
 {
@@ -6,129 +7,159 @@ namespace BOSSAutoRef.Data
     {
         public static string GetBrokerageStatusValues()
         {
-            return 
-                "[" + Environment.NewLine +
-                "	{" + Environment.NewLine +
-                "		\"Code\": \"ABK\"," + Environment.NewLine +
-                "		\"Description\": \"Alternate Broker\"," + Environment.NewLine +
-                "		\"CodeAndDescription\": \"ABK (Alternate Broker)\"," + Environment.NewLine +
-                "		\"Type\": \"CT\"," + Environment.NewLine +
-                "		\"ProcessingCountry\": \"CN\"," + Environment.NewLine +
-                "		\"OriginalDescription\": \"Alternate Broker\"" + Environment.NewLine +
-                "	}," + Environment.NewLine +
-                "	{" + Environment.NewLine +
-                "		\"Code\": \"DEM\"," + Environment.NewLine +
-                "		\"Description\": \"Deminius\"," + Environment.NewLine +
-                "		\"CodeAndDescription\": \"DEM (Deminius)\"," + Environment.NewLine +
-                "		\"Type\": \"CT\"," + Environment.NewLine +
-                "		\"ProcessingCountry\": \"CN\"," + Environment.NewLine +
-                "		\"OriginalDescription\": \"Deminius\"" + Environment.NewLine +
-                "	}," + Environment.NewLine +
-                "	{" + Environment.NewLine +
-                "	    \"Code\": \"ECS\"," + Environment.NewLine +
-                "		\"Description\": \"外海电商\"," + Environment.NewLine +
-                "		\"CodeAndDescription\": \"ECS (外海电商)\"," + Environment.NewLine +
-                "		\"Type\": \"CT\"," + Environment.NewLine +
-                "		\"ProcessingCountry\": \"CN\"," + Environment.NewLine +
-                "		\"OriginalDescription\": \"e-Commerce\"" + Environment.NewLine +
-                "	}," + Environment.NewLine +
-                "	{" + Environment.NewLine +
-                "       \"Code\": \"FML\"," + Environment.NewLine +
-                "		\"Description\": \"Formal Entry\"," + Environment.NewLine +
-                "		\"CodeAndDescription\": \"FML (Formal Entry)\"," + Environment.NewLine +
-                "		\"Type\": \"CT\"," + Environment.NewLine +
-                "		\"ProcessingCountry\": \"CN\"," + Environment.NewLine +
-                "		\"OriginalDescription\": \"Formal Entry\"" + Environment.NewLine +
-                "	}," + Environment.NewLine +
-                "	{" + Environment.NewLine +
-                "	\"Code\": \"FTZ\"," + Environment.NewLine +
-                "		\"Description\": \"Free Zone\"," + Environment.NewLine +
-                "		\"CodeAndDescription\": \"FTZ (Free Zone)\"," + Environment.NewLine +
-                "		\"Type\": \"CT\"," + Environment.NewLine +
-                "		\"ProcessingCountry\": \"CN\"," + Environment.NewLine +
-                "		\"OriginalDescription\": \"Free Zone\"" + Environment.NewLine +
-                "	}," + Environment.NewLine +
-                "	{" + Environment.NewLine +
-                "	\"Code\": \"FZT\"," + Environment.NewLine +
-                "		\"Description\": \"FreeTrade Zone Tranship\"," + Environment.NewLine +
-                "		\"CodeAndDescription\": \"FZT (FreeTrade Zone Tranship)\"," + Environment.NewLine +
-                "		\"Type\": \"CT\"," + Environment.NewLine +
-                "		\"ProcessingCountry\": \"CN\"," + Environment.NewLine +
-                "		\"OriginalDescription\": \"FreeTrade Zone Tranship\"" + Environment.NewLine +
-                "	}," + Environment.NewLine +
-                "	{" + Environment.NewLine +
-                "	\"Code\": \"FZW\"," + Environment.NewLine +
-                "		\"Description\": \"FreeTrade Zone Warehouse\"," + Environment.NewLine +
-                "		\"CodeAndDescription\": \"FZW (FreeTrade Zone Warehouse)\"," + Environment.NewLine +
-                "		\"Type\": \"CT\"," + Environment.NewLine +
-                "		\"ProcessingCountry\": \"CN\"," + Environment.NewLine +
-                "		\"OriginalDescription\": \"FreeTrade Zone Warehouse\"" + Environment.NewLine +
-                "	}," + Environment.NewLine +
-                "	{" + Environment.NewLine +
-                "	\"Code\": \"IDM\"," + Environment.NewLine +
-                "		\"Description\": \"Informal Deminums\"," + Environment.NewLine +
-                "		\"CodeAndDescription\": \"IDM (Informal Deminums)\"," + Environment.NewLine +
-                "		\"Type\": \"CT\"," + Environment.NewLine +
-                "		\"ProcessingCountry\": \"CN\"," + Environment.NewLine +
-                "		\"OriginalDescription\": \"Informal Deminums\"" + Environment.NewLine +
-                "	}," + Environment.NewLine +
-                "	{" + Environment.NewLine +
-                "	\"Code\": \"IDT\"," + Environment.NewLine +
-                "		\"Description\": \"Informal Dutiable\"," + Environment.NewLine +
-                "		\"CodeAndDescription\": \"IDT (Informal Dutiable)\"," + Environment.NewLine +
-                "		\"Type\": \"CT\"," + Environment.NewLine +
-                "		\"ProcessingCountry\": \"CN\"," + Environment.NewLine +
-                "		\"OriginalDescription\": \"Informal Dutiable\"" + Environment.NewLine +
-                "	}," + Environment.NewLine +
-                "	{" + Environment.NewLine +
-                "	\"Code\": \"INF\"," + Environment.NewLine +
-                "		\"Description\": \"Informal\"," + Environment.NewLine +
-                "		\"CodeAndDescription\": \"INF (Informal)\"," + Environment.NewLine +
-                "		\"Type\": \"CT\"," + Environment.NewLine +
-                "		\"ProcessingCountry\": \"CN\"," + Environment.NewLine +
-                "		\"OriginalDescription\": \"Informal\"" + Environment.NewLine +
-                "	}," + Environment.NewLine +
-                "	{" + Environment.NewLine +
-                "	\"Code\": \"LND\"," + Environment.NewLine +
-                "		\"Description\": \"Letter/Doc\"," + Environment.NewLine +
-                "		\"CodeAndDescription\": \"LND (Letter/Doc)\"," + Environment.NewLine +
-                "		\"Type\": \"CT\"," + Environment.NewLine +
-                "		\"ProcessingCountry\": \"CN\"," + Environment.NewLine +
-                "		\"OriginalDescription\": \"Letter/Doc\"" + Environment.NewLine +
-                "	}," + Environment.NewLine +
-                "	{" + Environment.NewLine +
-                "	\"Code\": \"PGS\"," + Environment.NewLine +
-                "		\"Description\": \"Personal goods\"," + Environment.NewLine +
-                "		\"CodeAndDescription\": \"PGS (Personal goods)\"," + Environment.NewLine +
-                "		\"Type\": \"CT\"," + Environment.NewLine +
-                "		\"ProcessingCountry\": \"CN\"," + Environment.NewLine +
-                "		\"OriginalDescription\": \"Personal goods\"" + Environment.NewLine +
-                "	}," + Environment.NewLine +
-                "	{" + Environment.NewLine +
-                "	\"Code\": \"UDB\"," + Environment.NewLine +
-                "		\"Description\": \"Underbond\"," + Environment.NewLine +
-                "		\"CodeAndDescription\": \"UDB (Underbond)\"," + Environment.NewLine +
-                "		\"Type\": \"CT\"," + Environment.NewLine +
-                "		\"ProcessingCountry\": \"CN\"," + Environment.NewLine +
-                "		\"OriginalDescription\": \"Underbond\"" + Environment.NewLine +
-                "	}," + Environment.NewLine +
-                "	{" + Environment.NewLine +
-                "	\"Code\": \"ULS\"," + Environment.NewLine +
-                "		\"Description\": \"Unaccompanied Luggage\"," + Environment.NewLine +
-                "		\"CodeAndDescription\": \"ULS (Unaccompanied Luggage)\"," + Environment.NewLine +
-                "		\"Type\": \"CT\"," + Environment.NewLine +
-                "		\"ProcessingCountry\": \"CN\"," + Environment.NewLine +
-                "		\"OriginalDescription\": \"Unaccompanied Luggage\"" + Environment.NewLine +
-                "	}," + Environment.NewLine +
-                "	{" + Environment.NewLine +
-                "	\"Code\": \"UND\"," + Environment.NewLine +
-                "		\"Description\": \"Undefined\"," + Environment.NewLine +
-                "		\"CodeAndDescription\": \"UND (Undefined)\"," + Environment.NewLine +
-                "		\"Type\": \"CT\"," + Environment.NewLine +
-                "		\"ProcessingCountry\": \"CN\"," + Environment.NewLine +
-                "		\"OriginalDescription\": \"Undefined\"" + Environment.NewLine +
-                "	}" + Environment.NewLine +
-                "]";
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("[");
+            stringBuilder.AppendLine("    {");
+            stringBuilder.AppendLine("        \"Code\": \"ABK\",");
+            stringBuilder.AppendLine("        \"Description\": \"Alternate Broker\",");
+            stringBuilder.AppendLine("        \"CodeAndDescription\": \"ABK (Alternate Broker)\",");
+            stringBuilder.AppendLine("        \"Type\": \"CT\",");
+            stringBuilder.AppendLine("        \"ProcessingCountry\": \"CN\",");
+            stringBuilder.AppendLine("        \"OriginalDescription\": \"Alternate Broker\"");
+            stringBuilder.AppendLine("    },");
+            stringBuilder.AppendLine("    {");
+            stringBuilder.AppendLine("        \"Code\": \"DEM\",");
+            stringBuilder.AppendLine("        \"Description\": \"Deminimis\",");
+            stringBuilder.AppendLine("        \"CodeAndDescription\": \"DEM (Deminimis)\",");
+            stringBuilder.AppendLine("        \"Type\": \"CT\",");
+            stringBuilder.AppendLine("        \"ProcessingCountry\": \"CN\",");
+            stringBuilder.AppendLine("        \"OriginalDescription\": \"Deminimis\"");
+            stringBuilder.AppendLine("    },");
+            stringBuilder.AppendLine("    {");
+            stringBuilder.AppendLine("        \"Code\": \"ECS\",");
+            stringBuilder.AppendLine("        \"Description\": \"外海电商\",");
+            stringBuilder.AppendLine("        \"CodeAndDescription\": \"ECS (外海电商)\",");
+            stringBuilder.AppendLine("        \"Type\": \"CT\",");
+            stringBuilder.AppendLine("        \"ProcessingCountry\": \"CN\",");
+            stringBuilder.AppendLine("        \"OriginalDescription\": \"e-Commerce\"");
+            stringBuilder.AppendLine("    },");
+            stringBuilder.AppendLine("    {");
+            stringBuilder.AppendLine("        \"Code\": \"FML\",");
+            stringBuilder.AppendLine("        \"Description\": \"Formal Entry\",");
+            stringBuilder.AppendLine("        \"CodeAndDescription\": \"FML (Formal Entry)\",");
+            stringBuilder.AppendLine("        \"Type\": \"CT\",");
+            stringBuilder.AppendLine("        \"ProcessingCountry\": \"CN\",");
+            stringBuilder.AppendLine("        \"OriginalDescription\": \"Formal Entry\"");
+            stringBuilder.AppendLine("    },");
+            stringBuilder.AppendLine("    {");
+            stringBuilder.AppendLine("        \"Code\": \"FTZ\",");
+            stringBuilder.AppendLine("        \"Description\": \"Free Zone\",");
+            stringBuilder.AppendLine("        \"CodeAndDescription\": \"FTZ (Free Zone)\",");
+            stringBuilder.AppendLine("        \"Type\": \"CT\",");
+            stringBuilder.AppendLine("        \"ProcessingCountry\": \"CN\",");
+            stringBuilder.AppendLine("        \"OriginalDescription\": \"Free Zone\"");
+            stringBuilder.AppendLine("    },");
+            stringBuilder.AppendLine("    {");
+            stringBuilder.AppendLine("        \"Code\": \"FZT\",");
+            stringBuilder.AppendLine("        \"Description\": \"FreeTrade Zone Transship\",");
+            stringBuilder.AppendLine("        \"CodeAndDescription\": \"FZT (FreeTrade Zone Transship)\",");
+            stringBuilder.AppendLine("        \"Type\": \"CT\",");
+            stringBuilder.AppendLine("        \"ProcessingCountry\": \"CN\",");
+            stringBuilder.AppendLine("        \"OriginalDescription\": \"FreeTrade Zone Transship\"");
+            stringBuilder.AppendLine("    },");
+            stringBuilder.AppendLine("    {");
+            stringBuilder.AppendLine("        \"Code\": \"FZW\",");
+            stringBuilder.AppendLine("        \"Description\": \"FreeTrade Zone Warehouse\",");
+            stringBuilder.AppendLine("        \"CodeAndDescription\": \"FZW (FreeTrade Zone Warehouse)\",");
+            stringBuilder.AppendLine("        \"Type\": \"CT\",");
+            stringBuilder.AppendLine("        \"ProcessingCountry\": \"CN\",");
+            stringBuilder.AppendLine("        \"OriginalDescription\": \"FreeTrade Zone Warehouse\"");
+            stringBuilder.AppendLine("    },");
+            stringBuilder.AppendLine("    {");
+            stringBuilder.AppendLine("        \"Code\": \"IDM\",");
+            stringBuilder.AppendLine("        \"Description\": \"Informal Deminimis\",");
+            stringBuilder.AppendLine("        \"CodeAndDescription\": \"IDM (Informal Deminimis)\",");
+            stringBuilder.AppendLine("        \"Type\": \"CT\",");
+            stringBuilder.AppendLine("        \"ProcessingCountry\": \"CN\",");
+            stringBuilder.AppendLine("        \"OriginalDescription\": \"Informal Deminimis\"");
+            stringBuilder.AppendLine("    },");
+            stringBuilder.AppendLine("    {");
+            stringBuilder.AppendLine("        \"Code\": \"IDT\",");
+            stringBuilder.AppendLine("        \"Description\": \"Informal Dutiable\",");
+            stringBuilder.AppendLine("        \"CodeAndDescription\": \"IDT (Informal Dutiable)\",");
+            stringBuilder.AppendLine("        \"Type\": \"CT\",");
+            stringBuilder.AppendLine("        \"ProcessingCountry\": \"CN\",");
+            stringBuilder.AppendLine("        \"OriginalDescription\": \"Informal Dutiable\"");
+            stringBuilder.AppendLine("    },");
+            stringBuilder.AppendLine("    {");
+            stringBuilder.AppendLine("        \"Code\": \"INF\",");
+            stringBuilder.AppendLine("        \"Description\": \"Informal\",");
+            stringBuilder.AppendLine("        \"CodeAndDescription\": \"INF (Informal)\",");
+            stringBuilder.AppendLine("        \"Type\": \"CT\",");
+            stringBuilder.AppendLine("        \"ProcessingCountry\": \"CN\",");
+            stringBuilder.AppendLine("        \"OriginalDescription\": \"Informal\"");
+            stringBuilder.AppendLine("    },");
+            stringBuilder.AppendLine("    {");
+            stringBuilder.AppendLine("        \"Code\": \"LND\",");
+            stringBuilder.AppendLine("        \"Description\": \"Letter/Doc\",");
+            stringBuilder.AppendLine("        \"CodeAndDescription\": \"LND (Letter/Doc)\",");
+            stringBuilder.AppendLine("        \"Type\": \"CT\",");
+            stringBuilder.AppendLine("        \"ProcessingCountry\": \"CN\",");
+            stringBuilder.AppendLine("        \"OriginalDescription\": \"Letter/Doc\"");
+            stringBuilder.AppendLine("    },");
+            stringBuilder.AppendLine("    {");
+            stringBuilder.AppendLine("        \"Code\": \"PGS\",");
+            stringBuilder.AppendLine("        \"Description\": \"Personal goods\",");
+            stringBuilder.AppendLine("        \"CodeAndDescription\": \"PGS (Personal goods)\",");
+            stringBuilder.AppendLine("        \"Type\": \"CT\",");
+            stringBuilder.AppendLine("        \"ProcessingCountry\": \"CN\",");
+            stringBuilder.AppendLine("        \"OriginalDescription\": \"Personal goods\"");
+            stringBuilder.AppendLine("    },");
+            stringBuilder.AppendLine("    {");
+            stringBuilder.AppendLine("        \"Code\": \"UDB\",");
+            stringBuilder.AppendLine("        \"Description\": \"Underbond\",");
+            stringBuilder.AppendLine("        \"CodeAndDescription\": \"UDB (Underbond)\",");
+            stringBuilder.AppendLine("        \"Type\": \"CT\",");
+            stringBuilder.AppendLine("        \"ProcessingCountry\": \"CN\",");
+            stringBuilder.AppendLine("        \"OriginalDescription\": \"Underbond\"");
+            stringBuilder.AppendLine("    },");
+            stringBuilder.AppendLine("    {");
+            stringBuilder.AppendLine("        \"Code\": \"ULS\",");
+            stringBuilder.AppendLine("        \"Description\": \"Unaccompanied Luggage\",");
+            stringBuilder.AppendLine("        \"CodeAndDescription\": \"ULS (Unaccompanied Luggage)\",");
+            stringBuilder.AppendLine("        \"Type\": \"CT\",");
+            stringBuilder.AppendLine("        \"ProcessingCountry\": \"CN\",");
+            stringBuilder.AppendLine("        \"OriginalDescription\": \"Unaccompanied Luggage\"");
+            stringBuilder.AppendLine("    },");
+            stringBuilder.AppendLine("    {");
+            stringBuilder.AppendLine("        \"Code\": \"UND\",");
+            stringBuilder.AppendLine("        \"Description\": \"Undefined\",");
+            stringBuilder.AppendLine("        \"CodeAndDescription\": \"UND (Undefined)\",");
+            stringBuilder.AppendLine("        \"Type\": \"CT\",");
+            stringBuilder.AppendLine("        \"ProcessingCountry\": \"CN\",");
+            stringBuilder.AppendLine("        \"OriginalDescription\": \"Undefined\"");
+            stringBuilder.AppendLine("    }");
+            stringBuilder.AppendLine("]");
+            return stringBuilder.ToString();
+        }
+
+        public static string GetLocalLookupCodes()
+        {
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("[");
+            stringBuilder.AppendLine("    {");
+            stringBuilder.AppendLine("        \"Code\": \"F_CLEAR\",");
+            stringBuilder.AppendLine("        \"Description\": \"ABK|DEM|FML|INF|LND|PGS|ULS|UND\",");
+            stringBuilder.AppendLine("        \"Type\": \"LPM\",");
+            stringBuilder.AppendLine("        \"CodeAndDescription\": \"F_CLEAR (ABK|DEM|FML|INF|LND|PGS|ULS|UND)\",");
+            stringBuilder.AppendLine("        \"OriginalDescription\": \"ABK|DEM|FML|INF|LND|PGS|ULS|UND\"");
+            stringBuilder.AppendLine("    },");
+            stringBuilder.AppendLine("    {");
+            stringBuilder.AppendLine("        \"Code\": \"F_CUSTOM\",");
+            stringBuilder.AppendLine("        \"Description\": \"NEW|RFC|INS|ERR\",");
+            stringBuilder.AppendLine("        \"Type\": \"LPM\",");
+            stringBuilder.AppendLine("        \"CodeAndDescription\": \"F_CUSTOM (NEW|RFC|INS|ERR)\",");
+            stringBuilder.AppendLine("        \"OriginalDescription\": \"NEW|RFC|INS|ERR\"");
+            stringBuilder.AppendLine("    },");
+            stringBuilder.AppendLine("    {");
+            stringBuilder.AppendLine("        \"Code\": \"F_RATING\",");
+            stringBuilder.AppendLine("        \"Description\": \"ABN|CMP|RNR|RNS\",");
+            stringBuilder.AppendLine("        \"Type\": \"LPM\",");
+            stringBuilder.AppendLine("        \"CodeAndDescription\": \"F_RATING (ABN|CMP|RNR|RNS)\",");
+            stringBuilder.AppendLine("        \"OriginalDescription\": \"ABN|CMP|RNR|RNS\"");
+            stringBuilder.AppendLine("    }");
+            stringBuilder.AppendLine("]");
+            return stringBuilder.ToString();
         }
 
         public static string GetMeasurementUnits()

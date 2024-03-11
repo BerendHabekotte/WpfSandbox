@@ -163,7 +163,8 @@ namespace BcWPFCustomControls.Controls
                 || e.Key.Equals(Key.PageUp)
                 || e.Key.Equals(Key.Insert)
                 || e.Key.Equals(Key.Delete)
-                || e.Key.Equals(Key.Escape))
+                || e.Key.Equals(Key.Escape)
+                || e.Key.Equals(Key.Tab))
             {
                 e.Handled = false;
                 return;

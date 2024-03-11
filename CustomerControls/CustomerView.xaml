@@ -25,12 +25,12 @@
                         <Control x:Name="theControl" Focusable="False" Template="{StaticResource ExtendedTemplate}" />
                         <DataTemplate.Triggers>
                             <DataTrigger 
-                    Binding=
-                        "{Binding 
-                            RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ComboBoxItem}}, 
-                            Path=IsSelected}" 
-                            Value="{x:Null}">
-                                <Setter TargetName="theControl" Property="Template" Value="{StaticResource ResourceKey=DescriptionTemplate}" />
+                                Binding=
+                                    "{Binding 
+                                        RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ComboBoxItem}}, 
+                                        Path=IsSelected}" 
+                                        Value="{x:Null}">
+                                            <Setter TargetName="theControl" Property="Template" Value="{StaticResource ResourceKey=DescriptionTemplate}" />
                             </DataTrigger>
                         </DataTemplate.Triggers>
                     </DataTemplate>
@@ -60,6 +60,7 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="25"></RowDefinition>
             <RowDefinition Height="25"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <Label Grid.Column="0">Id</Label>
@@ -144,7 +145,7 @@
             Grid.Row="4" 
             Grid.Column="1" 
             SelectedValuePath="Code"
-            ItemTemplate="{StaticResource LocalCountryTemplate}"
+            DisplayMemberPath="Description"
             SelectedValue="{Binding NormalClearanceType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             IsEditable="True"
             ItemsSource="{Binding ClearanceTypes}">
@@ -164,6 +165,7 @@
             Grid.Column="1"
             AutoRefType="TYPE_BrokStatusValue"
             AutoRefFilter="CT"
+            LookupFilter="F_CLEAR"
             DisplayMemberPath="CustomDescription"
             CustomDescriptionSeparator="-"
             CustomDescriptionFields="Code|Type|ProcessingCountry"
@@ -387,5 +389,28 @@
                 ValidatesOnExceptions=True}"
             PlaceholderText="{Binding TariffDetailsWatermark, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
         />
+        <Label Grid.Row="14" Grid.Column="0">Lookup Combo</Label>
+        <DockPanel
+            x:Name="ClearanceTypeDockPanel"
+            Grid.Row="14" Grid.Column="1" 
+            >
+            <c:ReferenceComboBox 
+                x:Name="FilteredClearanceTypes"
+                IsEditable="True"
+                AutoRefType="TYPE_BrokStatusValue"
+                AutoRefFilter="CT"
+                LookupFilter="F_CLEAR"
+                OpenDropDownOnEnterKeyOnly="False"
+                FilterMethod="StartsWith"                           
+                DisplayMemberPath="CustomDescription"
+                CustomDescriptionSeparator="-"
+                CustomDescriptionFields="Code|Type|ProcessingCountry"
+                SelectedValuePath="Code"
+                SelectedValueMemberPath="Description"
+                SelectedValue="{
+                    Binding NewClearanceType, 
+                    ValidatesOnExceptions=True}">
+            </c:ReferenceComboBox>
+        </DockPanel>
     </Grid>
 </UserControl>

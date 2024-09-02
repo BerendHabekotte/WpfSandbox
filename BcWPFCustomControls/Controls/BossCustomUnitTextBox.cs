@@ -134,7 +134,14 @@ namespace BcWPFCustomControls.Controls
             if (e.Key == Key.Tab)
             {
                 if (!(e.OriginalSource is TextBox item))
+                {
                     return;
+                }
+                else
+                {
+                    item.SelectAll();
+                }
+                    
 
                 if (item.Name != "AmountTextBox")
                     return;
@@ -159,7 +166,6 @@ namespace BcWPFCustomControls.Controls
         {
             PreviewGotKeyboardFocus += BossCustomUnitTextBox_PreviewGotKeyboardFocus;
             PreviewLostKeyboardFocus += BossCustomUnitTextBox_PreviewLostKeyboardFocus;
-            PreviewMouseDown += BossCustomUnitTextBox_PreviewMouseDown;
             LostFocus += BossCustomUnitTextBox_LostFocus;
         }
 
@@ -221,6 +227,7 @@ namespace BcWPFCustomControls.Controls
             txtBox.SelectAll();
             e.Handled = true;
             var errors = Validation.GetErrors(this);
+            //BossLibrary.MainLibrary.ShowErrors(errors[0].Exception);
         }
 
         private void BossCustomUnitTextBox_PreviewGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
@@ -232,21 +239,6 @@ namespace BcWPFCustomControls.Controls
             AmountUnitBoxFocus = Keyboard.PrimaryDevice.IsKeyDown(Key.Tab) ? false : true;
             SetControlVisibility(item);
         }
-
-        private void BossCustomUnitTextBox_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            //if (IsReadOnly)
-            //    return;
-            //if (e.LeftButton != MouseButtonState.Pressed)
-            //    return;
-            //var item = sender as Control;
-            //if (item == null)
-            //    return;
-            //if (item.IsKeyboardFocused)
-            //    return;
-            //ShowAmountAndUnitComboBoxTogether();
-        }
-
 
         private void SetControlVisibility(Control item)
         {

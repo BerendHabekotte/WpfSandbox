@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vm="clr-namespace:UserControls"
+                    xmlns:vw="clr-namespace:CNWpfTurbo.Views.UserControls">
+    <DataTemplate DataType="{x:Type vm:GoodsModelViewModel}">
+        <vw:GoodsModelView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:CommentsViewModel}">
+        <vw:CommentsView/>
+    </DataTemplate>
+</ResourceDictionary>

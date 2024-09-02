@@ -183,7 +183,7 @@ namespace BcWPFCustomControls.Controls
             hasCustomCodes = !customCodes.Count().Equals(0);
             table = CreateDataTable();
             CreateCustomDescriptionColumn();
-            originalItemsSource = ItemsSource = table.AsDataView();
+            SetItemsSource();
             GotFocus += ReferenceComboBox_GotFocus;
             LostFocus += ReferenceComboBox_LostFocus;
             KeyUp += ReferenceComboBox_KeyUp;
@@ -316,6 +316,21 @@ namespace BcWPFCustomControls.Controls
             row["CustomDescription"] = builder.ToString();
         }
 
+        private void SetItemsSource()
+        {
+            if (ItemsSource != null)
+            {
+                oldSelectedIndex = SelectedIndex;
+                ItemsSource = table.AsDataView();
+                SelectedIndex = oldSelectedIndex;
+            }
+            else
+            {
+                ItemsSource = table.AsDataView();
+            }
+            originalItemsSource = ItemsSource;
+        }
+
         private void SetSelectedValueMemberPath()
         {
             if (string.IsNullOrEmpty(SelectedValueMemberPath))
@@ -391,8 +406,8 @@ namespace BcWPFCustomControls.Controls
                 TextSearch.SetTextPath(this, SelectedValueMemberPath);
             }
             SetSelectedValueMemberPath();
-            var bindingExpression1 = GetBindingExpression(SelectedValueProperty);
-            bindingExpression1?.UpdateSource();
+            var bindingExpression = GetBindingExpression(SelectedValueProperty);
+            bindingExpression?.UpdateSource();
         }
 
         private void SetSelectedIndexOnLostFocus()

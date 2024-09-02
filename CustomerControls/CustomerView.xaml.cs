@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using BcWPFCustomControls.Controls;
 
 namespace CustomerControls
 {
@@ -56,6 +57,11 @@ namespace CustomerControls
                 }
             }
             return false;
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            Description.Focus();
         }
     }
 }

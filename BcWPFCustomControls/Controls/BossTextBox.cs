@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -23,12 +24,14 @@ namespace BcWPFCustomControls.Controls
                     DefaultUpdateSourceTrigger = UpdateSourceTrigger.LostFocus,
                 });
         }
+        private string updatedText;
 
         public BossTextBox()
         {
+            updatedText = string.Empty;
             KeyDown += BossTextBox_KeyDown;
             GotFocus += BossTextBox_GotFocus;
-
+            TextChanged += BossCustomTextBox_TextChanged;
         }
 
         private void BossTextBox_GotFocus(object sender, RoutedEventArgs e)
@@ -54,7 +57,7 @@ namespace BcWPFCustomControls.Controls
             get => (string)GetValue(PlaceholderTextProperty);
             set => SetValue(PlaceholderTextProperty, value);
         }
-
+       
         public static readonly DependencyProperty PlaceholderTextProperty =
             DependencyProperty.Register(
                 nameof(PlaceholderText),
@@ -93,6 +96,12 @@ namespace BcWPFCustomControls.Controls
 
         private void BossTextBox_KeyDown(object sender, KeyEventArgs e)
         {
+            if (e.Key == Key.Tab)
+            {
+                if (string.IsNullOrWhiteSpace(updatedText))
+                    Text = string.Empty;
+                return;                           
+            }
             if (e.Key != Key.Enter)
             {
                 return;
@@ -100,11 +109,24 @@ namespace BcWPFCustomControls.Controls
             if (!IsEnterKeyAsTab)
             {
                 return;
-            }
+            }           
             e.Handled = true;
             System.Windows.Forms.SendKeys.Send("{Tab}");
         }
-
+        private void BossCustomTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                if (!(e.OriginalSource is TextBox updatedTextBox))
+                    return;
+                updatedText = updatedTextBox.Text;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+       
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

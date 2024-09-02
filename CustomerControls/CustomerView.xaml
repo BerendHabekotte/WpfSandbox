@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:c="clr-namespace:BcWPFCustomControls.Controls;assembly=BcWPFCustomControls"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" Loaded="UserControl_Loaded">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -58,7 +58,7 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="25"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="25"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -76,15 +76,15 @@
         <TextBox x:Name="IdTest" Grid.Row="0" Grid.Column="3" Text="{Binding CustomerId, Mode=OneWay}"></TextBox>
 
         <Label Grid.Row="1" Grid.Column="0">Name</Label>
-        <c:BossCustomTextBox 
+        <c:BossTextBox 
             Grid.Row="1" 
             Grid.Column="1" 
             Text="{Binding 
-            Name, 
-            Mode=TwoWay, 
-            UpdateSourceTrigger=PropertyChanged,
-            ValidatesOnDataErrors=True}">
-        </c:BossCustomTextBox>
+                Name, 
+                Mode=TwoWay, 
+                UpdateSourceTrigger=PropertyChanged,
+                ValidatesOnDataErrors=True}">
+        </c:BossTextBox>
         <Label Grid.Row="1" Grid.Column="2">Model Name</Label>
         <TextBox 
             x:Name="NameTest"
@@ -98,14 +98,14 @@
         </TextBox>
 
         <Label Grid.Row="2" Grid.Column="0">Description</Label>
-        <c:BossCustomTextBox 
+        <c:BossTextBox 
             x:Name="Description"
             Grid.Row="2" 
             Grid.Column="1" 
             PlaceholderText="Fill in the description here"
             WatermarkHorizontalAlignment="Right"
             Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
-        </c:BossCustomTextBox>
+        </c:BossTextBox>
         <Label 
             Grid.Row="2" 
             Grid.Column="2" 
@@ -315,7 +315,7 @@
 
 
 
-        <Label 
+    <Label 
             Grid.Row="10"
             Grid.Column="0">Tariff</Label>
         <c:TariffComboBox
@@ -361,6 +361,18 @@
             PlaceholderText="{Binding TariffDetailsWatermark, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
             WatermarkHorizontalAlignment="Left"
         />
+        <Label Grid.Row="12" Grid.Column="0">ItemsSource Combobox</Label>
+        <c:ReferenceComboBox
+            Name="ItemsComboBox"
+            Grid.Row="12" Grid.Column="1"
+            ItemsSource="{Binding ClearanceTypes }"
+            SelectedValuePath="Code"
+            SelectedValueMemberPath="Description"
+            DisplayMemberPath="CustomDescription"
+            CustomDescriptionSeparator="-"
+            CustomDescriptionFields="Code|Type|ProcessingCountry"
+            SelectedValue ="{Binding NewClearanceType, ValidatesOnExceptions=True}">
+        </c:ReferenceComboBox>
         <ContentControl
             Grid.Row="12"
             Grid.Column="3">

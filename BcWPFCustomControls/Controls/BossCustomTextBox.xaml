@@ -115,10 +115,10 @@
                                 Padding="2,3,2,3"
                                 IsTabStop="{TemplateBinding IsReadOnly, Converter={StaticResource InverseBooleanConverter}}">
                                 <TextBox.Text>
-                                    <Binding Path="Text" 
+                                    <Binding Path="Text"
+                                             UpdateSourceTrigger="Explicit"
                                              NotifyOnValidationError="True"  
                                              ValidatesOnExceptions="True"  
-                                             UpdateSourceTrigger="PropertyChanged" 
                                              RelativeSource="{RelativeSource TemplatedParent}">
                                         <Binding.ValidationRules>
                                             <ExceptionValidationRule ValidatesOnTargetUpdated="False" />
@@ -136,6 +136,15 @@
                                         </TextBlock.Text>
                                     </TextBlock>
                                 </services:WatermarkService.Watermark>
+                                <TextBox.Style>
+                                    <Style BasedOn="{StaticResource {x:Type TextBox}}" TargetType="TextBox">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsReadOnly" Value="True">
+                                                <Setter Property="Background" Value="#E1EEFC" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
                             </TextBox>
                         </Grid>
                     </Border>
@@ -143,5 +152,4 @@
             </Setter.Value>
         </Setter>
     </Style>
-
 </ResourceDictionary>

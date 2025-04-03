@@ -55,7 +55,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\GoodsAttribute.cs" />
+    <Compile Include="Models\UserOrganizationPersonalContactModel.cs" />
+    <Compile Include="ViewModels\GoodsAttributesViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\UserInformationViewModel.cs" />
+    <Compile Include="Views\GoodsAttributesDialog.xaml.cs">
+      <DependentUpon>GoodsAttributesDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserInformationDialog.xaml.cs">
+      <DependentUpon>UserInformationDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -68,6 +78,18 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Resources\GeneralResources.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\GoodsAttributesDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserInformationDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Customer.cs" />
@@ -104,11 +126,20 @@
       <Project>{D56AABD2-04F9-40A4-B1B4-B63AAB67738E}</Project>
       <Name>BcWpfCommon</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BcWPFCustomControls\BcWPFCustomControls.csproj">
+      <Project>{0c64f0c6-756e-41e9-850d-7d5da5332f7f}</Project>
+      <Name>BcWPFCustomControls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BOSSAutoRef\BOSSAutoRef.csproj">
+      <Project>{131bad43-291d-4de4-83df-7b61e6966bc4}</Project>
+      <Name>BOSSAutoRef</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

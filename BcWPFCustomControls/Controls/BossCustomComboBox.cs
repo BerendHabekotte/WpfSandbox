@@ -372,6 +372,5 @@ namespace BcWPFCustomControls.Controls
         private static void WatermarkHorizontalAlignmentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
         }
-
     }
 }

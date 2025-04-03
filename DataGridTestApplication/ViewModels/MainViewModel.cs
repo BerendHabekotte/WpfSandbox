@@ -1,12 +1,14 @@
 ﻿using BcWpfCommon.Commands;
 using DataGridTestApplication.Models;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
+using DataGridTestApplication.Views;
 
 namespace DataGridTestApplication.ViewModels
 {
@@ -45,9 +47,11 @@ namespace DataGridTestApplication.ViewModels
 
         public ICommand LoadCommand => new ActionCommand<object>(Load);
 
-        private int selectedIndex = -1;
+        public ICommand ShowUserInformationDialogCommand 
+            => new ActionCommand<object>(ShowUserInformationDialogExecute);
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public ICommand ShowGoodsAttributesDialogCommand
+            => new ActionCommand<object>(ShowGoodsAttributesDialogExecute);
 
         private void Load(object obj)
         {
@@ -64,6 +68,30 @@ namespace DataGridTestApplication.ViewModels
             OnPropertyChanged(nameof(SelectedCustomer));
             OnPropertyChanged(nameof(EmployeeStatusLabel));
         }
+
+        private static void ShowUserInformationDialogExecute(object obj)
+        {
+            var viewModel = new UserInformationViewModel();
+            var view = new UserInformationDialog
+            {
+                DataContext = viewModel
+            };
+            view.ShowDialog();
+        }
+
+        private static void ShowGoodsAttributesDialogExecute(object obj)
+        {
+            var viewModel = new GoodsAttributesViewModel();
+            var view = new GoodsAttributesDialog()
+            {
+                DataContext = viewModel
+            };
+            view.ShowDialog();
+        }
+
+        private int selectedIndex = -1;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged(string propertyName)
         {

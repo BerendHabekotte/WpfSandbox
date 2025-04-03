@@ -26,10 +26,13 @@
                 <services:WatermarkService.Watermark>
                     <TextBlock
                         TextWrapping="{Binding 
-                            PlaceholderTextWrapping, 
-                            RelativeSource={RelativeSource TemplatedParent}}"
+                    PlaceholderTextWrapping, 
+                        RelativeSource={RelativeSource TemplatedParent}}"
                         HorizontalAlignment="{Binding 
                             Path=WatermarkHorizontalAlignment, 
+                            RelativeSource={RelativeSource TemplatedParent}}"
+                        VerticalAlignment="{Binding 
+                            Path=WatermarkVerticalAlignment, 
                             RelativeSource={RelativeSource TemplatedParent}}">
                         <TextBlock.Text>
                             <Binding

@@ -1,9 +1,9 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:BcWPFCustomControls.Controls"
-                    xmlns:services="clr-namespace:BcWPFCustomControls.Services"
                     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-                    xmlns:converters="clr-namespace:BcWpfCommon.Converters;assembly=BcWpfCommon">
+                    xmlns:converters="clr-namespace:BcWpfCommon.Converters;assembly=BcWpfCommon"
+                    xmlns:services="clr-namespace:BcWPFCustomControls.Services">
 
     <converters:BooleanOrConverter x:Key="BooleanOrConverter" />
     <Style TargetType="{x:Type local:BossCustomComboBox}">
@@ -142,7 +142,7 @@
                                     <i:InvokeCommandAction
                                         Command="{
                                             Binding ComboBoxMouseDoubleClick,
-                                            UpdateSourceTrigger=Explicit,
+                                            UpdateSourceTrigger=PropertyChanged,
                                             RelativeSource={RelativeSource TemplatedParent}}" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
@@ -157,7 +157,6 @@
                                     </TextBlock.Text>
                                 </TextBlock>
                             </services:WatermarkService.Watermark>
-
                         </ComboBox>
                     </Grid>
                 </ControlTemplate>

@@ -34,6 +34,17 @@
                             </DataTrigger>
                         </DataTemplate.Triggers>
                     </DataTemplate>
+                    <Style x:Key="Test" TargetType="{x:Type c:ReferenceComboBox}">
+                        <Setter Property="IsEditable" Value="True"></Setter>
+                        <Setter Property="AutoRefType" Value="TYPE_BrokStatusValue"/>
+                        <Setter Property="AutoRefFilter" Value="CT"/>
+                        <Setter Property="LookupFilter" Value="F_CLEAR"/>
+                        <Setter Property="DisplayMemberPath" Value="CustomDescription"/>
+                        <Setter Property="CustomDescriptionSeparator" Value="-"/>
+                        <Setter Property="CustomDescriptionFields" Value="Code|Type|ProcessingCountry"/>
+                        <Setter Property="SelectedValuePath" Value="Code"/>
+                        <Setter Property="SelectedValueMemberPath" Value="Description"/>
+                    </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -160,22 +171,16 @@
 
         <Label Grid.Row="6" Grid.Column="0">ReferenceComboBox</Label>
         <c:ReferenceComboBox 
-            x:Name="DescriptionComboBox"
+            Name="DescriptionComboBox"
             Grid.Row="6" 
             Grid.Column="1"
-            AutoRefType="TYPE_BrokStatusValue"
-            AutoRefFilter="CT"
-            LookupFilter="F_CLEAR"
-            DisplayMemberPath="CustomDescription"
-            CustomDescriptionSeparator="-"
-            CustomDescriptionFields="Code|Type|ProcessingCountry"
-            SelectedValuePath="Code"
-            SelectedValueMemberPath="Description"
+            Style="{StaticResource Test}"
             SelectedValue="{
                 Binding NewClearanceType, 
                 ValidatesOnExceptions=True
             }"
-            >
+            IsReadOnly="False"
+            AutomationProperties.AutomationId="DescriptionComboBox">
         </c:ReferenceComboBox>
 
         <!--<c:ReferenceComboBox 

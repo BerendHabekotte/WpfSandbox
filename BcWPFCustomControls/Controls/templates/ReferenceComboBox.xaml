@@ -45,6 +45,11 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsReadOnly" Value="True">
+                <Setter Property="IsTabStop" Value="False"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
     <LinearGradientBrush x:Key="ComboBox.Static.Background" EndPoint="0,1" StartPoint="0,0">
         <GradientStop Color="#FFF0F0F0" Offset="0.0"/>
@@ -212,10 +217,14 @@
                     Margin="{TemplateBinding Padding}" 
                     Style="{StaticResource ComboBoxEditableTextBox}" 
                     VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}">
+                    
                     <services:WatermarkService.Watermark>
                         <TextBlock
                             HorizontalAlignment="{Binding 
                                 Path=WatermarkHorizontalAlignment, 
+                                RelativeSource={RelativeSource TemplatedParent}}"
+                            VerticalAlignment="{Binding 
+                                Path=WatermarkVerticalAlignment, 
                                 RelativeSource={RelativeSource TemplatedParent}}">
                             <TextBlock.Text>
                                 <Binding

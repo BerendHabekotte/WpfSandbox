@@ -1,0 +1,149 @@
+﻿<Window x:Class="DataGridTestApplication.Views.UserInformationDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:BcWPFCustomControls.Controls;assembly=BcWPFCustomControls" 
+        xmlns:viewModels="clr-namespace:DataGridTestApplication.ViewModels"
+        d:DataContext="{d:DesignInstance Type=viewModels:UserInformationViewModel}"
+        mc:Ignorable="d" 
+        WindowStartupLocation="CenterScreen"
+        x:Name="UserInformationDialogWindow"
+        Title="编辑使用人信息"
+        Height="450" Width="800">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}">
+                <Setter Property="Background" Value="#4994D6" />
+                <Setter Property="Height" Value="25" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+            </Style>
+            <Style TargetType="DataGrid">
+                <Setter Property="BorderBrush" Value="Transparent" />
+            </Style>
+            <DataTemplate x:Key="SelectAllHeaderTemplate">
+                <CheckBox 
+                    x:Name="SelectAll" 
+                    HorizontalAlignment="Center"
+                    IsTabStop="False"
+                    IsChecked="{Binding Path= DataContext.AreAllSelected, 
+								    RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                ></CheckBox>
+            </DataTemplate>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition  Width="100"></ColumnDefinition>
+            <ColumnDefinition  Width="*"></ColumnDefinition>
+            <ColumnDefinition  Width="110"></ColumnDefinition>
+            <ColumnDefinition  Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0">使用单位联系人</Label>
+        <controls:BossTextBox 
+            x:Name="UserContactTextBox"
+            Grid.Row="0" Grid.Column="1"
+            Width="200"
+            HorizontalAlignment="Left"
+            Text="{Binding ContactName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+            />
+        <Label Grid.Row="0" Grid.Column="2">使用单位联系电话</Label>
+        <controls:BossTextBox 
+            x:Name="UserContactNumberTextBox"
+            Grid.Row="0" Grid.Column="3"
+            Width="200"
+            HorizontalAlignment="Left"
+            Text="{Binding ContactTelephone, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+            <TextBox.InputBindings>
+                <KeyBinding Key="Enter" Command="{Binding AddContactCommand}"/>
+            </TextBox.InputBindings>
+        </controls:BossTextBox>
+        <StackPanel 
+            Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
+            Orientation="Horizontal">
+            <Button 
+                x:Name="AddButton"
+                Width="50"
+                Content="新 增"
+                Command="{Binding AddCommand}">
+            </Button>
+            <Button 
+                x:Name="DeleteButton"
+                Width="50"
+                Content="删 除"
+                Command="{Binding DeleteCommand}">
+            </Button>
+        </StackPanel>
+
+        <DataGrid 
+            x:Name="UserInformationDataGrid"
+            Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" 
+            AutoGenerateColumns="False"
+            CanUserAddRows="False"
+            CanUserReorderColumns="False"
+            CanUserResizeColumns="True"
+            GridLinesVisibility="None"
+            VerticalScrollBarVisibility="Auto"
+            ItemsSource="{Binding Contacts}"
+            SelectionMode="Single"
+            SelectionUnit="FullRow"
+            SelectedItem="{Binding SelectedContact, Mode=TwoWay}">
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn
+                    x:Name="SelectContactCheckBox"
+                    HeaderTemplate="{StaticResource SelectAllHeaderTemplate}"
+                    Width="40"
+                    Binding="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    >
+                </DataGridCheckBoxColumn>
+                <DataGridTemplateColumn Header="序号" Width="60">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Label 
+                                HorizontalAlignment="Center" 
+                                VerticalAlignment="Center"
+                                Content="{Binding Index}">
+                            </Label>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="使用单位联系人" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                            <Label 
+                                HorizontalAlignment="Center" 
+                                Content="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
+                            </Label>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="使用单位联系电话" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Label 
+                                HorizontalAlignment="Center" 
+                                Content="{Binding Telephone, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
+                            </Label>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button 
+            x:Name="ConfirmButton"
+            Grid.Row="3" Grid.Column="0"
+            Grid.ColumnSpan="4"
+            Width="100"
+            Content="确 定" 
+            Command="{Binding ConfirmCommand}"
+            CommandParameter="{Binding ElementName=UserInformationDialogWindow}"/>
+    </Grid>
+</Window>

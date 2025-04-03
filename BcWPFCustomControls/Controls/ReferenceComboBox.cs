@@ -4,22 +4,21 @@ using BOSSAutoRef.Factory;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace BcWPFCustomControls.Controls
 {
-    public class ReferenceComboBox : ComboBox, INotifyPropertyChanged
+    public class ReferenceComboBox : ComboBox
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private const string CustomDescriptionName = "CustomDescription";
         private IEnumerable originalItemsSource;
         private DataTable table;
@@ -69,6 +68,18 @@ namespace BcWPFCustomControls.Controls
             DependencyProperty.Register(
                 nameof(WatermarkHorizontalAlignment),
                 typeof(HorizontalAlignment),
+                typeof(ReferenceComboBox),
+                new PropertyMetadata());
+
+        public VerticalAlignment WatermarkVerticalAlignment
+        {
+            get => (VerticalAlignment)GetValue(WatermarkVerticalAlignmentProperty);
+            set => SetValue(WatermarkVerticalAlignmentProperty, value);
+        }
+        public static readonly DependencyProperty WatermarkVerticalAlignmentProperty =
+            DependencyProperty.Register(
+                nameof(WatermarkVerticalAlignment),
+                typeof(VerticalAlignment),
                 typeof(ReferenceComboBox),
                 new PropertyMetadata());
 
@@ -196,6 +207,20 @@ namespace BcWPFCustomControls.Controls
             }
             TextSearch.SetTextPath(this, SelectedValueMemberPath);
             SetSelectedValueMemberPath();
+            var automationId = AutomationProperties.GetAutomationId(this);
+            SetAutomationIdentifiers(this, automationId);
+        }
+
+        private static void SetAutomationIdentifiers(DependencyObject element, string id)
+        {
+            if (element is TextBox textbox)
+            {
+                AutomationProperties.SetAutomationId(textbox, id);
+            }
+            for (var index = 0; index < VisualTreeHelper.GetChildrenCount(element); index++)
+            {
+                SetAutomationIdentifiers(VisualTreeHelper.GetChild(element,index), id);
+            }
         }
 
         private IEnumerable<string> GetCustomCodes()
@@ -347,11 +372,13 @@ namespace BcWPFCustomControls.Controls
             {
                 return string.Empty;
             }
-            var result = ItemsSource
-                .OfType<DataRowView>()
-                .ToList()[SelectedIndex][path]
-                .ToString();
-            return result;
+            var itemsSource = ItemsSource.OfType<DataRowView>().ToList();
+            if (SelectedIndex >= itemsSource.Count)
+            {
+                SelectedIndex = -1;
+                return string.Empty;
+            }
+            return itemsSource[SelectedIndex][path].ToString();
         }
 
         private void ReferenceComboBox_GotFocus(object sender, RoutedEventArgs e)
@@ -420,7 +447,7 @@ namespace BcWPFCustomControls.Controls
             {
                 return;
             }
-            FilterItemsSource();
+            FilterItemsSource(ignoreSelected: true);
             var count = ItemsSource.OfType<DataRowView>().Count();
             if (count == 1)
             {
@@ -507,7 +534,7 @@ namespace BcWPFCustomControls.Controls
             }
             if (IsDropDownOpen)
             {
-                FilterItemsSource();
+                FilterItemsSource(ignoreSelected: true);
             }
             IsDropDownOpen = true;
             if (e.OriginalSource is TextBox item)
@@ -558,20 +585,23 @@ namespace BcWPFCustomControls.Controls
             e.Handled = true;
         }
 
-        private void FilterItemsSource(bool filterText = true)
+        private void FilterItemsSource(bool filterText = true, bool ignoreSelected = false)
         {
+            Trace.WriteLine($"{DateTime.Now} - FilterItemsSource Start: originalText: {Text}.");
             var originalText = Text;
-            Trace.WriteLine($"{DateTime.Now} - FilterItemsSource Start: originalText: {originalText}.");
-            var items = ItemsSource.Cast<DataRowView>().ToArray();
-            if (filterText && items.Length > 0)
-            {
-                filterText = !(SelectedIndex >= 0 && Text.Equals(items[SelectedIndex][DisplayMemberPath]));
-            }
+            var isFiltered = filterText && (ignoreSelected || !IsValueSelected());
             ItemsSource = originalItemsSource
                 .Cast<DataRowView>()
-                .Where(r => FilterCustomCodes(r) && FilterText(r, filterText));
+                .Where(row => FilterCustomCodes(row) && FilterText(row, isFiltered));
             Text = originalText;
             Trace.WriteLine($"{DateTime.Now} - FilterItemsSource End: Text: {Text}.");
+        }
+
+        private bool IsValueSelected()
+        {
+            return originalItemsSource
+                .Cast<DataRowView>()
+                .FirstOrDefault(item => item[DisplayMemberPath].ToString().Equals(Text)) != null;
         }
 
         private bool FilterCustomCodes(DataRowView row)
@@ -584,13 +614,12 @@ namespace BcWPFCustomControls.Controls
             return customCodes.Any(c => c.Equals(code));
         }
 
-        private bool FilterText(DataRowView row, bool filterText)
+        private bool FilterText(DataRowView row, bool isFiltered)
         {
-            if (!filterText)
+            if (!isFiltered)
             {
                 return true;
             }
-
             if (string.IsNullOrEmpty(Text))
             {
                 return true;

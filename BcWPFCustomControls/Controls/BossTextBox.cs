@@ -94,6 +94,17 @@ namespace BcWPFCustomControls.Controls
                 typeof(HorizontalAlignment),
                 typeof(BossTextBox));
 
+        public VerticalAlignment WatermarkVerticalAlignment
+        {
+            get => (VerticalAlignment)GetValue(WatermarkVerticalAlignmentProperty);
+            set => SetValue(WatermarkVerticalAlignmentProperty, value);
+        }
+        public static readonly DependencyProperty WatermarkVerticalAlignmentProperty =
+            DependencyProperty.Register(
+                nameof(WatermarkVerticalAlignment),
+                typeof(VerticalAlignment),
+                typeof(BossTextBox));
+
         private void BossTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Tab)

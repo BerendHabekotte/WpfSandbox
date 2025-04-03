@@ -14,6 +14,7 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <Button 
             VerticalAlignment="Top" 
@@ -34,7 +35,9 @@
             VerticalScrollBarVisibility="Auto"
             ItemsSource="{Binding Customers}"
             SelectionMode="Single"
-            SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}">
+            SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}"
+            IsReadOnly="True"
+            >
             <DataGrid.Columns>
                 <DataGridTemplateColumn Width="30">
                     <DataGridTemplateColumn.HeaderTemplate>
@@ -69,7 +72,7 @@
                     </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox IsChecked="{Binding IsActive}"/>
+                            <CheckBox IsChecked="{Binding IsActive}" IsEnabled="False"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -89,6 +92,21 @@
                 <CheckBox Width="30" IsChecked="{Binding SelectedCustomer.IsActive}"></CheckBox>
             </StackPanel>
             <Label x:Name="EmployeeStatusLabel" Content="{Binding EmployeeStatusLabel}"></Label>
+        </StackPanel>
+        <StackPanel
+            Grid.Row="2"
+            VerticalAlignment="Bottom" 
+            HorizontalAlignment="Center"
+            Orientation="Horizontal"
+            >
+            <Button 
+                Margin="10"
+                Command="{Binding ShowUserInformationDialogCommand}"
+            >Load</Button>
+            <Button 
+                Margin="10"
+                Command="{Binding ShowGoodsAttributesDialogCommand}"
+            >Goods Attributes</Button>
         </StackPanel>
     </Grid>
 </Window>

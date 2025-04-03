@@ -224,7 +224,7 @@ namespace CustomerControls
                 CustomerId = 1,
                 CustomerName = "Jansen",
                 Description = "Onze eerste klant",
-                NewClearanceType = "INF",
+                NewClearanceType = "IDM",
                 WeightUnit = "KG",
                 Weight = d
             };

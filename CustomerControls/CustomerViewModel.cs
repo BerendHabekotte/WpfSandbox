@@ -100,11 +100,10 @@ namespace CustomerControls
             {
                 if (value == null)
                 {
-                    model.NormalClearanceType = null;
                     return;
                 }
                 model.NormalClearanceType = value;
-                OnPropertyChanged("NormalClearanceType");
+                OnPropertyChanged(null);
             }
         }
 
@@ -114,18 +113,22 @@ namespace CustomerControls
             set
             {
                 model.NewClearanceType = value;
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    throw new Exception("Clearance type is a mandatory field.");
-                }
-                if (value == "FML")
-                {
-                    throw new Exception("Formal Entry is not allowed");
-                }
-                OnPropertyChanged("NewClearanceType");
+                //if (string.IsNullOrWhiteSpace(value))
+                //{
+                //    throw new Exception("Clearance type is a mandatory field.");
+                //}
+                //if (value == "FML")
+                //{
+                //    throw new Exception("Formal Entry is not allowed");
+                //}
+                OnPropertyChanged(null);
             }
         }
 
+        public bool IsClearanceTypeFormal => model.IsNewClearanceTypeFormal;
+        public bool IsNormalClearanceTypeFormal => model.IsNormalClearanceTypeFormal;
+
+        public DataView NormalClearanceTypes => GetClearanceTypes();
         public DataView ClearanceTypes => GetClearanceTypes();
 
 
@@ -185,6 +188,16 @@ namespace CustomerControls
         public DataView Tariffs => model?.Tariffs;
 
         public string TariffDetailsWatermark => GetTariffDetailsWatermark();
+
+        public string TariffDetails
+        {
+            get => model.TariffDetails;
+            set
+            {
+                model.TariffDetails = value;
+                OnPropertyChanged(nameof(TariffDetails));
+            }
+        }
 
         private string GetTariffDetailsWatermark()
         {

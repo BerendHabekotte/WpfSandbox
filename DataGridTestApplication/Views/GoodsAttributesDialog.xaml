@@ -29,13 +29,13 @@
             <Style TargetType="DataGrid">
                 <Setter Property="BorderBrush" Value="Transparent" />
             </Style>
-            <!--<Style x:Key="Attribute" TargetType="CheckBox">
-                <Triggers>
-                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Content}" Value="x:Null">
+            <Style x:Key="Attribute" TargetType="CheckBox">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Content}" Value="">
                         <Setter Property="Visibility" Value="Hidden"></Setter>
                     </DataTrigger>
-                </Triggers>
-            </Style>-->
+                </Style.Triggers>
+            </Style>
             <DataTemplate x:Key="SelectAllHeaderTemplate">
                 <CheckBox 
                     x:Name="SelectAll" 
@@ -75,6 +75,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <CheckBox 
+                                Style="{StaticResource Attribute}"
                                 IsChecked="{Binding 
                                     [0].IsSelected, 
                                     UpdateSourceTrigger=PropertyChanged,
@@ -88,6 +89,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <CheckBox 
+                                Style="{StaticResource Attribute}"
                                 IsChecked="{Binding 
                                     [1].IsSelected, 
                                     UpdateSourceTrigger=PropertyChanged,
@@ -101,6 +103,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <CheckBox 
+                                Style="{StaticResource Attribute}"
                                 IsChecked="{Binding 
                                     [2].IsSelected, 
                                     UpdateSourceTrigger=PropertyChanged,

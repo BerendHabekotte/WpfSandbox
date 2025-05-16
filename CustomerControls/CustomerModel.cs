@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Data;
 using System.Diagnostics;
-using Newtonsoft.Json;
-using BOSSAutoRef;
-using BOSSAutoRef.Factory;
 
 namespace CustomerControls
 {
@@ -51,6 +49,10 @@ namespace CustomerControls
         public string TariffDetails { get; set; }
 
         public string TariffWatermark { get; set; }
+
+        public bool IsNewClearanceTypeFormal => NewClearanceType == "FML";
+
+        public bool IsNormalClearanceTypeFormal => NormalClearanceType == "FML";
 
         public DataView Tariffs => tariffs;
 

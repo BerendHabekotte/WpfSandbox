@@ -75,6 +75,7 @@
     <Compile Include="DataGridPopup.xaml.cs">
       <DependentUpon>DataGridPopup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Services\IsFirstSelectedService.cs" />
     <Compile Include="Services\WatermarkAdorner.cs" />
     <Compile Include="Services\WatermarkService.cs" />
     <Compile Include="ViewModels\DataGridPopupViewModel.cs" />

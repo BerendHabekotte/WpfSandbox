@@ -4,6 +4,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:c="clr-namespace:BcWPFCustomControls.Controls;assembly=BcWPFCustomControls"
+             xmlns:local="clr-namespace:CustomerControls"
+             d:DataContext="{d:DesignInstance Type=local:CustomerViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Loaded="UserControl_Loaded">
     <UserControl.Resources>
@@ -30,7 +32,7 @@
                                         RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ComboBoxItem}}, 
                                         Path=IsSelected}" 
                                         Value="{x:Null}">
-                                            <Setter TargetName="theControl" Property="Template" Value="{StaticResource ResourceKey=DescriptionTemplate}" />
+                                <Setter TargetName="theControl" Property="Template" Value="{StaticResource ResourceKey=DescriptionTemplate}" />
                             </DataTrigger>
                         </DataTemplate.Triggers>
                     </DataTemplate>
@@ -159,7 +161,7 @@
             DisplayMemberPath="Description"
             SelectedValue="{Binding NormalClearanceType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             IsEditable="True"
-            ItemsSource="{Binding ClearanceTypes}">
+            ItemsSource="{Binding NormalClearanceTypes}">
         </ComboBox>
         <Label Grid.Row="4" Grid.Column="2">Normal Model CT</Label>
         <TextBox
@@ -167,6 +169,15 @@
             Grid.Row="4" 
             Grid.Column="3" 
             Text="{Binding NormalClearanceType, Mode=OneWay}">
+            <TextBox.Style>
+                <Style TargetType="TextBox">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsNormalClearanceTypeFormal}" Value="True">
+                            <Setter Property="IsTabStop" Value="False"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
         </TextBox>
 
         <Label Grid.Row="6" Grid.Column="0">ReferenceComboBox</Label>
@@ -175,9 +186,12 @@
             Grid.Row="6" 
             Grid.Column="1"
             Style="{StaticResource Test}"
+            IsFilteredWithClosedDropDown="True"
             SelectedValue="{
                 Binding NewClearanceType, 
-                ValidatesOnExceptions=True
+                ValidatesOnExceptions=True,
+                Mode=TwoWay,
+                UpdateSourceTrigger=LostFocus
             }"
             IsReadOnly="False"
             AutomationProperties.AutomationId="DescriptionComboBox">
@@ -212,7 +226,6 @@
             AutoRefType="TYPE_BrokStatusValue"
             AutoRefFilter="CT"
             DisplayMemberPath="CustomDescription"
-            IsTabStop="True"
             CustomDescriptionSeparator="-"
             CustomDescriptionFields="Code|Type|ProcessingCountry"
             SelectedValuePath="Code"
@@ -222,13 +235,16 @@
                 ValidatesOnExceptions=True
             }"
             PlaceholderText="Dit is de tweede tekst"
-            WatermarkHorizontalAlignment="Center" 
-            Height="26" 
-            Margin="0,0,5,0" 
-            Grid.RowSpan="2" 
-            VerticalAlignment="Top"
-            SelectedIndex="1"
-        >
+            >
+            <c:ReferenceComboBox.Style>
+                <Style TargetType="c:ReferenceComboBox">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsClearanceTypeFormal}" Value="True">
+                            <Setter Property="IsTabStop" Value="False"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </c:ReferenceComboBox.Style>
         </c:ReferenceComboBox>
 
 
@@ -244,7 +260,7 @@
         <Label Grid.Row="7" Grid.Column="0">Measurements</Label>
         <c:ReferenceComboBox 
             x:Name="MeasurementComboBox"
-            Grid.Row="6" 
+            Grid.Row="7" Grid.Column="1"
             AutoRefType="TYPE_BrokStatusValue"
             AutoRefFilter="CT"
             DisplayMemberPath="CustomDescription"
@@ -258,8 +274,8 @@
             IsEditable="True"
             PlaceholderText="Andere tekst"
             WatermarkHorizontalAlignment="Center"
-            CustomDescriptionFields="Code|Description" Grid.ColumnSpan="3" Height="26" Margin="122,0,122,31" Grid.RowSpan="3" VerticalAlignment="Bottom"
-            />
+            CustomDescriptionFields="Code|Description">
+        </c:ReferenceComboBox>
 
 
         <Label Grid.Row="8" Grid.Column="0">Weight</Label>
@@ -318,9 +334,7 @@
             Text="{Binding Description, Mode=OneWay}">
         </TextBox>
 
-
-
-    <Label 
+        <Label 
             Grid.Row="10"
             Grid.Column="0">Tariff</Label>
         <c:TariffComboBox
@@ -429,5 +443,11 @@
                     ValidatesOnExceptions=True}">
             </c:ReferenceComboBox>
         </DockPanel>
+        <CheckBox 
+            Grid.Row="14" Grid.Column="3"
+            IsChecked="{Binding IsNormalClearanceTypeFormal, Mode=OneWay}"
+            Content="Is normal clearance type formal"
+            IsEnabled="False"
+            ></CheckBox>
     </Grid>
 </UserControl>

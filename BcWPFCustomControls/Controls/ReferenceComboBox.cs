@@ -187,6 +187,19 @@ namespace BcWPFCustomControls.Controls
                 typeof(ReferenceComboBox),
                 new PropertyMetadata(FilterMethods.Contains));
 
+        public bool IsFilteredWithClosedDropDown
+        {
+            get => (bool)GetValue(IsFilteredWithClosedDropDownProperty);
+            set => SetValue(IsFilteredWithClosedDropDownProperty, value);
+        }
+
+        public static readonly DependencyProperty IsFilteredWithClosedDropDownProperty =
+            DependencyProperty.Register(
+                nameof(IsFilteredWithClosedDropDown),
+                typeof(bool),
+                typeof(ReferenceComboBox),
+                new PropertyMetadata(false));
+
         private void ReferenceComboBox_Loaded(object sender, RoutedEventArgs e)
         {
             oldSelectedIndex = -1;
@@ -208,6 +221,15 @@ namespace BcWPFCustomControls.Controls
             TextSearch.SetTextPath(this, SelectedValueMemberPath);
             SetSelectedValueMemberPath();
             var automationId = AutomationProperties.GetAutomationId(this);
+            if (string.IsNullOrEmpty(automationId) && !string.IsNullOrEmpty(Name))
+            {
+                automationId = Name;
+                AutomationProperties.SetAutomationId(this, automationId);
+            }
+            if (string.IsNullOrEmpty(automationId))
+            {
+                return;
+            }
             SetAutomationIdentifiers(this, automationId);
         }
 
@@ -259,8 +281,10 @@ namespace BcWPFCustomControls.Controls
                 {
                     switch (ItemsSource)
                     {
-                        case DataView view: return view.ToTable();
-                        default: return new DataTable();
+                        case DataView view:
+                            return view.ToTable();
+                        default:
+                            return new DataTable();
                     }
                 }
                 var dataView = Builder
@@ -443,15 +467,23 @@ namespace BcWPFCustomControls.Controls
             {
                 return;
             }
-            if (SelectedItem is DataRowView selectedItem && selectedItem[DisplayMemberPath].Equals(Text))
+            if (!(SelectedItem is DataRowView selectedItem))
+            {
+                FilterItemsSource(ignoreSelected: true);
+                var count = ItemsSource.OfType<DataRowView>().Count();
+                if (count == 1)
+                {
+                    SelectedIndex = 0;
+                }
+                return;
+            }
+            if (selectedItem[DisplayMemberPath].Equals(Text))
             {
                 return;
             }
-            FilterItemsSource(ignoreSelected: true);
-            var count = ItemsSource.OfType<DataRowView>().Count();
-            if (count == 1)
+            if (IsFilteredWithClosedDropDown && SelectedIndex.Equals(0))
             {
-                SelectedIndex = 0;
+                Text = (string)selectedItem[DisplayMemberPath];
             }
         }
 
@@ -517,13 +549,28 @@ namespace BcWPFCustomControls.Controls
                 case Key.Enter:
                     break;
                 default:
-                    if (OpenDropDownOnEnterKeyOnly && !IsDropDownOpen)
+                    if (IsFilteredWithClosedDropDown && !IsDropDownOpen)
                     {
+                        FilterWithClosedDropDown(e);
                         return;
                     }
                     break;
             }
             OpenDropDown(e);
+        }
+
+        private void FilterWithClosedDropDown(KeyEventArgs e)
+        {
+            FilterItemsSource();
+            var originalText = Text;
+            SelectedIndex = ItemsSource.OfType<DataRowView>().Count() == 1
+                ? SelectedIndex = 0
+                : SelectedIndex = -1;
+            Text = originalText;
+            if (e.OriginalSource is TextBox item)
+            {
+                item.CaretIndex = Text.Length;
+            }
         }
 
         private void OpenDropDown(KeyEventArgs e)
@@ -594,7 +641,6 @@ namespace BcWPFCustomControls.Controls
                 .Cast<DataRowView>()
                 .Where(row => FilterCustomCodes(row) && FilterText(row, isFiltered));
             Text = originalText;
-            Trace.WriteLine($"{DateTime.Now} - FilterItemsSource End: Text: {Text}.");
         }
 
         private bool IsValueSelected()

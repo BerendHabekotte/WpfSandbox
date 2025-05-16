@@ -14,7 +14,10 @@ namespace DataGridTestApplication.ViewModels
 {
     public class GoodsAttributesViewModel : INotifyPropertyChanged
     {
-        private enum Names { First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eight, Ninth, Tenth}
+        private enum Names
+        {
+            First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eight, Ninth, Tenth
+        }
         private const int ElementsPerRow = 3;
 
         public GoodsAttributesViewModel()
@@ -31,7 +34,10 @@ namespace DataGridTestApplication.ViewModels
             get; private set;
         }
 
-        public ObservableCollection<GoodsAttribute[]> GoodsAttributeRows { get; private set; }
+        public ObservableCollection<GoodsAttribute[]> GoodsAttributeRows
+        {
+            get; private set;
+        }
 
         public ICommand ConfirmCommand => new ActionCommand<object>(ConfirmCommandExecute);
 
@@ -68,10 +74,15 @@ namespace DataGridTestApplication.ViewModels
                 GoodsAttributeRows.Add(goodsAttributesRow.ToArray());
                 goodsAttributesRow.Clear();
             }
-            if (goodsAttributesRow.Count > 0)
+            if (goodsAttributesRow.Count <= 0)
             {
-                GoodsAttributeRows.Add(goodsAttributesRow.ToArray());
+                return;
             }
+            for (var i = goodsAttributesRow.Count; i <= ElementsPerRow; i++)
+            {
+                goodsAttributesRow.Add(new GoodsAttribute{Name = ""});
+            }
+            GoodsAttributeRows.Add(goodsAttributesRow.ToArray());
         }
 
         private GoodsAttribute selectedAttribute;
